@@ -41,7 +41,7 @@ env/
 *.sqlite
 
 # Ignore .env files
-*.env
+.env
 
 # Ignore all folders named "files"
 **/files/
