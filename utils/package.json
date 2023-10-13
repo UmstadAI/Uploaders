@@ -1,0 +1,19 @@
+{
+  "name": "mdx-converter",
+  "version": "1.0.0",
+  "description": "converter mdx to md files",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mdx-to-md": "^0.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.5"
+  }
+}

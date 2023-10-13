@@ -43,5 +43,8 @@ env/
 # Ignore .env files
 .env
 
+# Ignore all folders named "node_modules"
+**/node_modules/
+
 # Ignore all folders named "files"
 **/files/
