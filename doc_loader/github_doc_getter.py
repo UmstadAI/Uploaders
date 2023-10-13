@@ -28,9 +28,9 @@ for repo in repos:
         os.mkdir(f"files/{repo_name}")
 
     # function to get files from a directory
-    def get_files(contents, repo_name, dir_name):
+    def get_files(_contents, repo_name, dir_name):
         # loop through each content
-        for content in contents:
+        for content in _contents:
             if content["type"] == "file":
                 # get the file name
                 file_name = content["name"]
