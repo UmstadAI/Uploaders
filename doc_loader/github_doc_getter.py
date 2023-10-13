@@ -24,6 +24,37 @@ def snake_case(string):
 repos = ["o1-labs/docs2",
          "MinaProtocol/mina"]
 
+# function to get files from a directory
+def get_files(contents, repo_name, dir_name):
+    stack = [(contents, repo_name, dir_name)]  # Initialize stack with initial directory
+
+    while stack:
+        current_contents, current_repo_name, current_dir_name = stack.pop()
+
+        for content in current_contents:
+            if content["type"] == "file":
+                # get the file name
+                file_name = content["name"]
+                # get the file download url
+                download_url = content["download_url"]
+                # get the file content
+                file_content = requests.get(download_url, headers=headers).text
+                # write the file content to a file
+                with open(f"files/{current_repo_name}/{current_dir_name}/{file_name}", "w") as f:
+                    f.write(file_content)
+            elif content["type"] == "dir":
+                # get the directory name
+                sub_dir_name = content["name"]
+                # get the directory contents API url
+                dir_contents_url = content["url"]
+                # get the directory contents
+                dir_contents = requests.get(dir_contents_url, headers=headers).json()
+                # create a directory with the directory name
+                if not os.path.exists(f"files/{current_repo_name}/{current_dir_name}/{sub_dir_name}"):
+                    os.mkdir(f"files/{current_repo_name}/{current_dir_name}/{sub_dir_name}")
+                # Add sub-directory to stack
+                stack.append((dir_contents, current_repo_name, f"{current_dir_name}/{sub_dir_name}"))
+
 # loop through each repository
 for repo in repos:
     # get the repository name
@@ -36,57 +67,7 @@ for repo in repos:
     if not os.path.exists(f"files/{repo_name}"):
         os.mkdir(f"files/{repo_name}")
 
-    # function to get files from a directory
-    def get_files(contents, repo_name, dir_name):
-        # loop through each content
-        for content in contents:
-            if content["type"] == "file":
-                # get the file name
-                file_name = content["name"]
-                # get the file download url
-                download_url = content["download_url"]
-                # get the file content
-                file_content = requests.get(download_url, headers=headers).text
-                # write the file content to a file
-                with open(f"files/{repo_name}/{dir_name}/{snake_case(file_name)}", "w") as f:
-                    f.write(file_content)
-            elif content["type"] == "dir":
-                # get the directory name
-                sub_dir_name = content["name"]
-                # get the directory contents API url
-                dir_contents_url = content["url"]
-                # get the directory contents
-                dir_contents = requests.get(dir_contents_url, headers=headers).json()
-                # create a directory with the directory name
-                if not os.path.exists(f"files/{repo_name}/{dir_name}/{sub_dir_name}"):
-                    os.mkdir(f"files/{repo_name}/{dir_name}/{sub_dir_name}")
-                # loop through each directory content
-                get_files(dir_contents, repo_name, f"{dir_name}/{sub_dir_name}")
-
-    # loop through each content
-    for content in contents:
-        if content["type"] == "file":
-            # get the file name
-            file_name = content["name"]
-            # get the file download url
-            download_url = content["download_url"]
-            # get the file content
-            file_content = requests.get(download_url, headers=headers).text
-            # write the file content to a file
-            with open(f"files/{repo_name}/{snake_case(file_name)}", "w") as f:
-                f.write(file_content)
-        elif content["type"] == "dir":
-            # get the directory name
-            dir_name = content["name"]
-            # get the directory contents API url
-            dir_contents_url = content["url"]
-            # get the directory contents
-            dir_contents = requests.get(dir_contents_url, headers=headers).json()
-            # create a directory with the directory name
-            if not os.path.exists(f"files/{repo_name}/{dir_name}"):
-                os.mkdir(f"files/{repo_name}/{dir_name}")
-            # loop through each directory content
-            get_files(dir_contents, repo_name, dir_name)
+    get_files(contents, repo_name, "")
 
             
 
