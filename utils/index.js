@@ -7,7 +7,6 @@ const basePath = "../doc_loader/files"
 const markdownFiles = [];
 
 function findMarkdownFiles(directory) {
-
     fs.readdirSync(directory).forEach(file => {
         const fullPath = path.join(directory, file);
         if (fs.statSync(fullPath).isDirectory()) {
@@ -19,10 +18,13 @@ function findMarkdownFiles(directory) {
 }
 
 findMarkdownFiles(basePath);
-console.log(markdownFiles)
 
 export async function mdxToMarkdown(markdownFiles) {
     // TODO mdx to md
+    for (let i = 0; i < markdownFiles.length; i++) {
+        const markdown = await mdxToMd(markdownFiles[i])
+        console.log(markdown)
+    }
 }
 
 mdxToMarkdown(markdownFiles)
