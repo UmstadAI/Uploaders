@@ -32,3 +32,4 @@ base_dir = "./files"
 
 markdown_files = glob.glob(os.path.join(base_dir, '**/*.md'), recursive=True)
 markdown_files += glob.glob(os.path.join(base_dir, '**/*.mdx'), recursive=True)
+print(len(markdown_files))
