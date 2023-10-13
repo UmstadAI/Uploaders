@@ -1,6 +1,15 @@
 import os
 import requests
 import re
+from dotenv import load_dotenv, find_dotenv
+
+_ = load_dotenv(find_dotenv()) # read local .env file
+
+token = os.getenv('GITHUB_ACCESS_TOKEN') or 'GITHUB_ACCESS_TOKEN'
+
+headers = {
+    'Authorization': f'token {token}'
+}
 
 # create a directory named "files" if it does not exist
 if not os.path.exists("files"):
@@ -22,37 +31,37 @@ for repo in repos:
     # get the repository contents API url
     contents_url = f"https://api.github.com/repos/{repo}/contents/docs"
     # get the contents of the repository
-    contents = requests.get(contents_url).json()
+    contents = requests.get(contents_url, headers=headers).json()
 
     if not os.path.exists(f"files/{repo_name}"):
         os.mkdir(f"files/{repo_name}")
 
     # function to get files from a directory
-    def get_files(_contents, repo_name, dir_name):
+    def get_files(contents, repo_name, dir_name):
         # loop through each content
-        for content in _contents:
+        for content in contents:
             if content["type"] == "file":
                 # get the file name
                 file_name = content["name"]
                 # get the file download url
                 download_url = content["download_url"]
                 # get the file content
-                file_content = requests.get(download_url).text
+                file_content = requests.get(download_url, headers=headers).text
                 # write the file content to a file
                 with open(f"files/{repo_name}/{dir_name}/{snake_case(file_name)}", "w") as f:
                     f.write(file_content)
             elif content["type"] == "dir":
                 # get the directory name
-                dir_name = content["name"]
+                sub_dir_name = content["name"]
                 # get the directory contents API url
                 dir_contents_url = content["url"]
                 # get the directory contents
-                dir_contents = requests.get(dir_contents_url).json()
+                dir_contents = requests.get(dir_contents_url, headers=headers).json()
                 # create a directory with the directory name
-                if not os.path.exists(f"files/{repo_name}/{dir_name}"):
-                    os.mkdir(f"files/{repo_name}/{dir_name}")
+                if not os.path.exists(f"files/{repo_name}/{dir_name}/{sub_dir_name}"):
+                    os.mkdir(f"files/{repo_name}/{dir_name}/{sub_dir_name}")
                 # loop through each directory content
-                get_files(dir_contents, repo_name, dir_name)
+                get_files(dir_contents, repo_name, f"{dir_name}/{sub_dir_name}")
 
     # loop through each content
     for content in contents:
@@ -62,7 +71,7 @@ for repo in repos:
             # get the file download url
             download_url = content["download_url"]
             # get the file content
-            file_content = requests.get(download_url).text
+            file_content = requests.get(download_url, headers=headers).text
             # write the file content to a file
             with open(f"files/{repo_name}/{snake_case(file_name)}", "w") as f:
                 f.write(file_content)
@@ -72,7 +81,7 @@ for repo in repos:
             # get the directory contents API url
             dir_contents_url = content["url"]
             # get the directory contents
-            dir_contents = requests.get(dir_contents_url).json()
+            dir_contents = requests.get(dir_contents_url, headers=headers).json()
             # create a directory with the directory name
             if not os.path.exists(f"files/{repo_name}/{dir_name}"):
                 os.mkdir(f"files/{repo_name}/{dir_name}")
