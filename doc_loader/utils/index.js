@@ -2,7 +2,7 @@ import { mdxToMd } from "mdx-to-md"
 import fs from "fs"
 import path from "path";
 
-const basePath = "../doc_loader/files"
+const basePath = "../files"
 
 const markdownFiles = [];
 
@@ -18,6 +18,7 @@ function findMarkdownFiles(directory) {
 }
 
 findMarkdownFiles(basePath);
+console.log(markdownFiles)
 
 export async function mdxToMarkdown(markdownFiles) {
     // TODO mdx to md
