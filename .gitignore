@@ -43,8 +43,8 @@ env/
 # Ignore .env files
 .env
 
-# Ignore .ds_store files
-.DS_Store
+# Ignore .ds_store all files
+**/.DS_Store
 
 # Ignore all folders named "node_modules"
 **/node_modules/
