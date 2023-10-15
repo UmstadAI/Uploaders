@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 
 const absolutePath = path.resolve("../files");
-const basePath = "../files";
 
 const markdownFiles = [];
 
