@@ -51,3 +51,4 @@ env/
 
 # Ignore all folders named "files"
 **/files/
+**/.DS_Store
