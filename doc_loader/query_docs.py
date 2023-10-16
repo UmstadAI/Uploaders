@@ -35,27 +35,10 @@ def query_docs(query):
 
     vector_store = Pinecone(index, embed.embed_query, "text")
 
-    prompt_template = """
-    You are a professional senior developer who is working on a zkApp smart contract.
-    You are asked to create a zkApp smart contracts or questions about MINA Protocol and zkApps.
-    Consider zkApp Smart Contracts are circuits.
-    {context}
-
-    Question: {question}
-    Answer questions beginner friendly and in a professional manner. If user asks to create zkApp smart contract, create it and send it to the user.
-    """
-    PROMPT = PromptTemplate(
-        template=prompt_template,
-        input_variables=["question", "context"]
-    )
-
-    chain_type_kwargs = {"prompt": PROMPT}
-
     qa = RetrievalQA.from_chain_type(
         llm=chat,
         chain_type="stuff",
         retriever=vector_store.as_retriever(),
-        chain_type_kwargs=chain_type_kwargs
     )
 
     xq = openai.Embedding.create(input=query, engine=embed_model)['data'][0]['embedding']
@@ -63,5 +46,5 @@ def query_docs(query):
 
     return qa.run(query)
 
-result = query_docs("Can you create zkApp smart contract which checks if user has a specific number? And also provide the smart contract tests")
+result = query_docs("How to test MINA Protocol zkApp smart contracts? Provide simple code example")
 print(result)
