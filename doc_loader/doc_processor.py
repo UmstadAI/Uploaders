@@ -1,6 +1,8 @@
 import glob
 import os
 import openai
+import pinecone
+import time
 
 from uuid import uuid4
 from langchain.document_loaders import UnstructuredMarkdownLoader
@@ -10,6 +12,8 @@ from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv(), override=True) # read local .env file
 
 openai.api_key = os.getenv('OPENAI_API_KEY') or 'OPENAI_API_KEY'
+pinecone_api_key = os.getenv('PINECONE_API_KEY') or 'YOUR_API_KEY'
+pinecone_env = os.getenv('PINECONE_ENVIRONMENT') or "YOUR_ENV"
 
 base_dir = "./files"
 
@@ -58,6 +62,7 @@ text_splitter = RecursiveCharacterTextSplitter(
 splitted_docs = text_splitter.split_documents(docs)
 
 # EMBEDDING
+
 model_name = 'text-embedding-ada-002'
 texts = [c.page_content for c in splitted_docs]
 
@@ -69,3 +74,28 @@ embeddings = openai.Embedding.create(
 embeds = [record['embedding'] for record in embeddings['data']]
 
 # PINECONE STORE
+pinecone.init(api_key=pinecone_api_key, environment=pinecone_env)
+
+index_name = 'zkappumstad'
+if index_name in pinecone.list_indexes():
+    pinecone.delete_index(index_name)
+
+pinecone.create_index(
+    name=index_name,
+    metric='dotproduct',
+    dimension=1536
+)
+
+while not pinecone.describe_index(index_name).status['ready']:
+        time.sleep(1)
+
+index = pinecone.Index(index_name)
+
+def get_vectors(chunks):
+    def extract_title(document):
+        lines = document.page_content.split('\n')
+        for line in lines:
+            if line.startswith('title:'):
+                title = line.split('title:')[1].strip()
+                return title
+        return ""
