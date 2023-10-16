@@ -21,15 +21,30 @@ function findMarkdownFiles(directory) {
 findMarkdownFiles(absolutePath);
 console.log(markdownFiles);
 
+async function removeImportsFromMarkdown(markdownFile) {
+  const content = fs.readFileSync(markdownFile, 'utf-8');
+  const lines = content.split('\n');
+
+  const modifiedLines = lines.filter(line => {
+    return !line.includes('@site')
+     && !line.includes('<ResponsiveVideo') 
+     && !line.includes('</Subhead') 
+     && !line.includes('<Subhead') 
+     && !line.includes('<HomepageFeatures')
+  });
+
+  fs.writeFileSync(markdownFile, modifiedLines.join('\n'), 'utf-8');
+  const markdown = fs.readFileSync(markdownFile, 'utf-8');
+  return markdown;
+}
+
 export async function mdxToMarkdown(markdownFiles) {
   // TODO mdx to md
   for (let i = 0; i < markdownFiles.length; i++) {
-    const fileName = path.basename(markdownFiles[i], ".mdx");
     const newName = markdownFiles[i].replace(".mdx", ".md");
-    console.log(fileName);
-    const markdown = await mdxToMd(markdownFiles[i]);
+    const markdown = await removeImportsFromMarkdown(markdownFiles[i]);
+
     await writeFile(`${newName}`, markdown)
-    console.log(markdown);
   }
 }
 
