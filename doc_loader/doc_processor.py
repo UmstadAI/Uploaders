@@ -60,7 +60,6 @@ splitted_docs = text_splitter.split_documents(docs)
 # EMBEDDING
 model_name = 'text-embedding-ada-002'
 texts = [c.page_content for c in splitted_docs]
-print(texts[25])
 
 embeddings = openai.Embedding.create(
     input=texts,
