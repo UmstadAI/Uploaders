@@ -110,13 +110,8 @@ vectors = [(ids[i], embeds[i], {
     'text': splitted_docs[i].page_content, 
     'title': extract_title(splitted_docs[i])}) for i in range(len(splitted_docs))]
 
-counter = 0
+for i in range(0, len(vectors), 100):
+    batch = vectors[i:i+100]
+    index.upsert(batch)
 
-for i in range(len(vectors) // 100):
-    print("upserting", i*100, (i+1)*100)
-    if (i+1)*100 > len(vectors):
-        index.upsert(vectors[i*100:len(vectors)])
-        print("Last batch upserted up to", len(vectors))
-    index.upsert(vectors[i*100:(i+1)*100])
-    counter += 1
-    print(counter)
+print(pinecone.describe_index(index_name))
