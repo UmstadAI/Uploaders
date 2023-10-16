@@ -6,9 +6,8 @@ from uuid import uuid4
 from langchain.document_loaders import UnstructuredMarkdownLoader
 from langchain.text_splitter import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter, Language
 
-
 from dotenv import load_dotenv, find_dotenv
-_ = load_dotenv(find_dotenv()) # read local .env file
+_ = load_dotenv(find_dotenv(), override=True) # read local .env file
 
 openai.api_key = os.getenv('OPENAI_API_KEY') or 'OPENAI_API_KEY'
 
@@ -52,9 +51,8 @@ md_docs = [md_splitter.create_documents([markdown_text.page_content]) for markdo
 # SPLITTING
 
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size = 400,
+    chunk_size = 800,
     chunk_overlap  = 100,
-    is_separator_regex = False,
 )
 
 splitted_docs = text_splitter.split_documents(docs)
@@ -62,6 +60,7 @@ splitted_docs = text_splitter.split_documents(docs)
 # EMBEDDING
 model_name = 'text-embedding-ada-002'
 texts = [c.page_content for c in splitted_docs]
+print(texts[25])
 
 embeddings = openai.Embedding.create(
     input=texts,
@@ -69,4 +68,5 @@ embeddings = openai.Embedding.create(
 )
 
 embeds = [record['embedding'] for record in embeddings['data']]
-print(embeds)
+
+# PINECONE STORE
