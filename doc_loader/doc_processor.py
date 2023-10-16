@@ -59,6 +59,7 @@ text_splitter = RecursiveCharacterTextSplitter(
     chunk_overlap  = 100,
 )
 
+# IMPORTANT VARIABLE
 splitted_docs = text_splitter.split_documents(docs)
 
 # EMBEDDING
@@ -71,6 +72,7 @@ embeddings = openai.Embedding.create(
     model=model_name,
 )
 
+# IMPORTANT VARIABLE
 embeds = [record['embedding'] for record in embeddings['data']]
 
 # PINECONE STORE
@@ -91,11 +93,30 @@ while not pinecone.describe_index(index_name).status['ready']:
 
 index = pinecone.Index(index_name)
 
-def get_vectors(chunks):
-    def extract_title(document):
-        lines = document.page_content.split('\n')
-        for line in lines:
-            if line.startswith('title:'):
-                title = line.split('title:')[1].strip()
-                return title
-        return ""
+def extract_title(document):
+    lines = document.page_content.split('\n')
+    for line in lines:
+        if line.startswith('title:'):
+            title = line.split('title:')[1].strip()
+            return title
+        elif line.startswith('# '):
+            title = line.split('#')[1].strip()
+            return title
+    return ""
+
+ids = [str(uuid4()) for _ in range(len(splitted_docs))]
+
+vectors = [(ids[i], embeds[i], {
+    'text': splitted_docs[i].page_content, 
+    'title': extract_title(splitted_docs[i])}) for i in range(len(splitted_docs))]
+
+counter = 0
+
+for i in range(len(vectors) // 100):
+    print("upserting", i*100, (i+1)*100)
+    if (i+1)*100 > len(vectors):
+        index.upsert(vectors[i*100:len(vectors)])
+        print("Last batch upserted up to", len(vectors))
+    index.upsert(vectors[i*100:(i+1)*100])
+    counter += 1
+    print(counter)
