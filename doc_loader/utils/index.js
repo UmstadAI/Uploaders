@@ -1,6 +1,7 @@
 import { mdxToMd } from "mdx-to-md";
 import fs from "fs";
 import path from "path";
+import { writeFile } from "fs/promises";
 
 const absolutePath = path.resolve("../files");
 
@@ -23,7 +24,11 @@ console.log(markdownFiles);
 export async function mdxToMarkdown(markdownFiles) {
   // TODO mdx to md
   for (let i = 0; i < markdownFiles.length; i++) {
+    const fileName = path.basename(markdownFiles[i], ".mdx");
+    const newName = markdownFiles[i].replace(".mdx", ".md");
+    console.log(fileName);
     const markdown = await mdxToMd(markdownFiles[i]);
+    await writeFile(`${newName}`, markdown)
     console.log(markdown);
   }
 }
