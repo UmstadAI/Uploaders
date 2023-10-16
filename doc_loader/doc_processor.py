@@ -10,6 +10,8 @@ from langchain.text_splitter import MarkdownHeaderTextSplitter, RecursiveCharact
 from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv()) # read local .env file
 
+openai.api_key = os.getenv('OPENAI_API_KEY') or 'OPENAI_API_KEY'
+
 base_dir = "./files"
 
 
@@ -61,7 +63,6 @@ splitted_docs = text_splitter.split_documents(docs)
 model_name = 'text-embedding-ada-002'
 texts = [c.page_content for c in splitted_docs]
 
-openai.api_key = os.getenv('OPENAI_API_KEY') or 'OPENAI_API_KEY'
 embeddings = openai.Embedding.create(
     input=texts,
     model=model_name,
