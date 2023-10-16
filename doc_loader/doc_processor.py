@@ -1,12 +1,5 @@
 import glob
 import os
-import openai
-import tiktoken
-import pinecone
-import json
-import time
-import requests
-import numpy as np
 
 from uuid import uuid4
 from langchain.document_loaders import UnstructuredMarkdownLoader
@@ -31,5 +24,3 @@ base_dir = "./files"
 
 
 markdown_files = glob.glob(os.path.join(base_dir, '**/*.md'), recursive=True)
-markdown_files += glob.glob(os.path.join(base_dir, '**/*.mdx'), recursive=True)
-print(len(markdown_files))
