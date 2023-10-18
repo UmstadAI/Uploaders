@@ -53,7 +53,6 @@ md_docs = [md_splitter.create_documents([markdown_text.page_content]) for markdo
 """
 
 # SPLITTING
-
 text_splitter = RecursiveCharacterTextSplitter(
     chunk_size = 800,
     chunk_overlap  = 100,
@@ -63,7 +62,6 @@ text_splitter = RecursiveCharacterTextSplitter(
 splitted_docs = text_splitter.split_documents(docs)
 
 # EMBEDDING
-
 model_name = 'text-embedding-ada-002'
 texts = [c.page_content for c in splitted_docs]
 
@@ -79,6 +77,10 @@ embeds = [record['embedding'] for record in embeddings['data']]
 pinecone.init(api_key=pinecone_api_key, environment=pinecone_env)
 
 index_name = 'zkappumstad'
+
+
+#Use this for just first time to upload
+
 if index_name in pinecone.list_indexes():
     pinecone.delete_index(index_name)
 
@@ -86,7 +88,8 @@ pinecone.create_index(
     name=index_name,
     metric='dotproduct',
     dimension=1536
-)
+) 
+
 
 while not pinecone.describe_index(index_name).status['ready']:
         time.sleep(1)
@@ -114,4 +117,4 @@ for i in range(0, len(vectors), 100):
     batch = vectors[i:i+100]
     index.upsert(batch)
 
-print(pinecone.describe_index(index_name))
+print(index.describe_index_stats())
