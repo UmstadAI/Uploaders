@@ -17,7 +17,6 @@ pinecone_api_key = os.getenv('PINECONE_API_KEY') or 'YOUR_API_KEY'
 pinecone_env = os.getenv('PINECONE_ENVIRONMENT') or "YOUR_ENV"
 
 def query_docs(query):
-
     embed_model = "text-embedding-ada-002"
 
     chat = ChatOpenAI(
@@ -46,5 +45,5 @@ def query_docs(query):
 
     return qa.run(query)
 
-result = query_docs("How to test MINA Protocol zkApp smart contracts? Provide simple code example")
+result = query_docs("How to deploy a zkapp")
 print(result)
