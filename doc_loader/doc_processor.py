@@ -67,7 +67,7 @@ texts = [c.page_content for c in splitted_docs]
 
 print("Created", len(texts), "texts")
 
-chunks = [texts[i:(i + 1000) if (i+1000)<  len(texts) else len(texts)
+chunks = [texts[i:(i + 1000) if (i+1000) <  len(texts) else len(texts)
                  ] for i in range(0, len(texts), 1000)]
 embeds = []
 print("Have", len(chunks), "chunks")
