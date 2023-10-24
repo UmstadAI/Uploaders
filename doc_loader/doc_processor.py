@@ -54,7 +54,7 @@ md_docs = [md_splitter.create_documents([markdown_text.page_content]) for markdo
 
 # SPLITTING
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size = 800,
+    chunk_size = 300,
     chunk_overlap  = 100,
 )
 
@@ -65,21 +65,30 @@ splitted_docs = text_splitter.split_documents(docs)
 model_name = 'text-embedding-ada-002'
 texts = [c.page_content for c in splitted_docs]
 
-embeddings = openai.Embedding.create(
-    input=texts,
-    model=model_name,
-)
+print("Created", len(texts), "texts")
 
-# IMPORTANT VARIABLE
-embeds = [record['embedding'] for record in embeddings['data']]
+chunks = [texts[i:(i + 1000) if (i+1000) <  len(texts) else len(texts)
+                 ] for i in range(0, len(texts), 1000)]
+embeds = []
+
+print("Have", len(chunks), "chunks")
+print("Last chunk has", len(chunks[-1]), "texts")
+
+for chunk, i in zip(chunks, range(len(chunks))):
+    print("Chunk", i, "of", len(chunk))
+    new_embeddings = openai.Embedding.create(
+        input=chunk,
+        model=model_name,
+    )
+    new_embeds = [record['embedding'] for record in new_embeddings['data']]
+    embeds.extend(new_embeds)
 
 # PINECONE STORE
 pinecone.init(api_key=pinecone_api_key, environment=pinecone_env)
 
 index_name = 'zkappumstad'
 
-
-#Use this for just first time to upload
+# Use this for just first time to upload
 
 if index_name in pinecone.list_indexes():
     pinecone.delete_index(index_name)
