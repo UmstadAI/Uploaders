@@ -65,7 +65,7 @@ vectors = [(ids[i], embeds[i], {
 
 
 """
-if vectors has more than 100 elements, use batch uprest with loop
+if vectors has more than 100 elements, use batch upsert with loop
 """
 print(vectors[0])
 print(index.describe_index_stats())

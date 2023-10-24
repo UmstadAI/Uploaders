@@ -45,5 +45,5 @@ def query_docs(query):
 
     return qa.run(query)
 
-result = query_docs("How to deploy a zkapp")
+result = query_docs("How many fields elements can there be in a struct ?")
 print(result)
