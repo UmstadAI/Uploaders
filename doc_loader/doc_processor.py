@@ -70,8 +70,10 @@ print("Created", len(texts), "texts")
 chunks = [texts[i:(i + 1000) if (i+1000) <  len(texts) else len(texts)
                  ] for i in range(0, len(texts), 1000)]
 embeds = []
+
 print("Have", len(chunks), "chunks")
 print("Last chunk has", len(chunks[-1]), "texts")
+
 for chunk, i in zip(chunks, range(len(chunks))):
     print("Chunk", i, "of", len(chunk))
     new_embeddings = openai.Embedding.create(
@@ -81,16 +83,12 @@ for chunk, i in zip(chunks, range(len(chunks))):
     new_embeds = [record['embedding'] for record in new_embeddings['data']]
     embeds.extend(new_embeds)
 
-# IMPORTANT VARIABLE
-# embeds = [record['embedding'] for record in embeddings['data']]
-
 # PINECONE STORE
 pinecone.init(api_key=pinecone_api_key, environment=pinecone_env)
 
 index_name = 'zkappumstad'
 
-
-#Use this for just first time to upload
+# Use this for just first time to upload
 
 if index_name in pinecone.list_indexes():
     pinecone.delete_index(index_name)
