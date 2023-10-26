@@ -25,8 +25,8 @@ print(f"fetched {len(all_pages_data)} documents.")
 
 # SPLITTING
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size = 400,
-    chunk_overlap  = 100,
+    chunk_size = 600,
+    chunk_overlap  = 150,
 )
 
 splitted_docs = text_splitter.split_documents(all_pages_data)
