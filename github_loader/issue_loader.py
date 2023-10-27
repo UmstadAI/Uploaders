@@ -38,35 +38,39 @@ def get_github_issue_and_comments(issue_link):
     else:
         return None, f"Error fetching issue. Status code: {response.status_code}"
 
-issues = []
+def extract_issue_data(issue_links):
+    issues = []
 
-for link in issue_links:
-    issue_data, comments_data = get_github_issue_and_comments(link)
-    if issue_data is None or comments_data is None:
-        continue
+    for link in issue_links:
+        issue_data, comments_data = get_github_issue_and_comments(link)
+        if issue_data is None or comments_data is None:
+            continue
 
-    issue_number = issue_data['number']
-    issue_title = issue_data['title']
-    issue_writer = issue_data['user']['login']
-    is_issue_open = issue_data['state'] == 'open'
-    issue_body = issue_data['body']
+        issue_number = issue_data['number']
+        issue_title = issue_data['title']
+        issue_writer = issue_data['user']['login']
+        is_issue_open = issue_data['state'] == 'open'
+        issue_body = issue_data['body']
 
-    issue = {}
-    comments = []
-    for comment in comments_data:
-        comment_writer = comment['user']['login']
-        comment_body = comment['body']
-        # comment_reactions = comment['reactions']
-        # comment_reactions.pop('url', None)
-        comments.append((comment_writer, comment_body))
-    
-    issue['number'] = issue_number
-    issue['title'] = issue_title
-    issue['writer'] = issue_writer
-    issue['is_open'] = is_issue_open
-    issue['body'] = issue_body
-    issue['comments'] = comments
+        issue = {}
+        comments = []
+        for comment in comments_data:
+            comment_writer = comment['user']['login']
+            comment_body = comment['body']
+            # comment_reactions = comment['reactions']
+            # comment_reactions.pop('url', None)
+            comments.append((comment_writer, comment_body))
+        
+        issue['number'] = issue_number
+        issue['title'] = issue_title
+        issue['writer'] = issue_writer
+        issue['is_open'] = is_issue_open
+        issue['body'] = issue_body
+        issue['comments'] = comments
 
-    issues.append(issue)
+        issues.append(issue)
 
-print(issues[3])
+        return issues
+
+issue_data = extract_issue_data(issue_links)
+print(len(issue_data))
