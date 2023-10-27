@@ -1,5 +1,6 @@
 import os
 import requests
+import time
 
 from langchain.document_loaders import GitHubIssuesLoader
 
@@ -60,6 +61,7 @@ def extract_issue_data(issue_links):
             # comment_reactions = comment['reactions']
             # comment_reactions.pop('url', None)
             comments.append((comment_writer, comment_body))
+            print(comment)
         
         issue['number'] = issue_number
         issue['title'] = issue_title
@@ -69,6 +71,9 @@ def extract_issue_data(issue_links):
         issue['comments'] = comments
 
         issues.append(issue)
+        print(issue)
+
+        time.sleep(1)
 
         return issues
 
