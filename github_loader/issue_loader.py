@@ -75,7 +75,7 @@ def extract_issue_data(issue_links):
 
         time.sleep(1)
 
-        return issues
+    return issues
 
 issue_data = extract_issue_data(issue_links)
 print(len(issue_data))
