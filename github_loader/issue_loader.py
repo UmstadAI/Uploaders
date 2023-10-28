@@ -35,8 +35,10 @@ def get_github_issue_and_comments(issue_link):
             comments_data = comments_response.json()
             return issue_data, comments_data
         else:
+            print("Error fetching comments")
             return None, f"Error fetching comments. Status code: {comments_response.status_code}"
     else:
+        print("Error fetching issue")
         return None, f"Error fetching issue. Status code: {response.status_code}"
 
 def extract_issue_data(issue_links):
@@ -61,7 +63,6 @@ def extract_issue_data(issue_links):
             # comment_reactions = comment['reactions']
             # comment_reactions.pop('url', None)
             comments.append((comment_writer, comment_body))
-            print(comment)
         
         issue['number'] = issue_number
         issue['title'] = issue_title
@@ -71,7 +72,6 @@ def extract_issue_data(issue_links):
         issue['comments'] = comments
 
         issues.append(issue)
-        print(issue)
 
         time.sleep(1)
 
