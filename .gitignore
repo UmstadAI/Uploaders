@@ -54,3 +54,4 @@ env/
 # Ignore all folders named "files"
 **/files/
 doc_loader/.DS_Store
+github_loader/output.csv

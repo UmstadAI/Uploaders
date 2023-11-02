@@ -1,6 +1,7 @@
 import os
 import requests
 import time
+import csv
 
 from langchain.document_loaders import GitHubIssuesLoader
 
@@ -43,7 +44,7 @@ def get_github_issue_and_comments(issue_link):
 
 def extract_issue_data(issue_links):
     issues = []
-
+    x = 0
     for link in issue_links:
         issue_data, comments_data = get_github_issue_and_comments(link)
         if issue_data is None or comments_data is None:
@@ -72,10 +73,30 @@ def extract_issue_data(issue_links):
         issue['comments'] = comments
 
         issues.append(issue)
-
-        time.sleep(1)
+        print(issues)
+        x += 1
+        
+        time.sleep(5)
 
     return issues
 
 issue_data = extract_issue_data(issue_links)
 print(len(issue_data))
+
+file_name = 'output.csv'
+
+with open(file_name, mode='w', newline='') as file:
+    writer = csv.writer(file)
+
+def export_to_csv(data, file_name):
+    field_names = data[0].keys()
+
+    with open(file_name, 'w', newline='') as csvfile:
+        csv_writer = csv.DictWriter(csvfile, fieldnames=field_names)
+
+        csv_writer.writeheader()
+
+        for row in data:
+            csv_writer.writerow(row)
+
+export_to_csv(issue_data, file_name)
