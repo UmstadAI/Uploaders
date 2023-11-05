@@ -34,9 +34,51 @@ md_header_splitted_docs = [markdown_splitter.split_text(doc.page_content) for do
 # Char-level splits
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
+# SPLITTING
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=300, chunk_overlap=30
+    chunk_size=800, chunk_overlap=200
 )
 
-# Split
-splits = [text_splitter.split_documents(doc) for doc in md_header_splitted_docs]
+splitted_docs = [text_splitter.split_documents(doc) for doc in md_header_splitted_docs]
+
+#EMBEDDING
+model_name = 'text-embedding-ada-002'
+texts = [t.page_content for c in splitted_docs for t in c]
+
+print("Created", len(texts), "texts")
+
+chunks = [texts[i:(i + 1000) if (i+1000) <  len(texts) else len(texts)] for i in range(0, len(texts), 1000)]
+embeds = []
+
+metadatas = [t.metadata for c in splitted_docs for t in c]
+print("Metadatas length: ", len(metadatas))
+
+print("Have", len(chunks), "chunks")
+print("Last chunk has", len(chunks[-1]), "texts")
+
+for chunk, i in zip(chunks, range(len(chunks))):
+    print("Chunk", i, "of", len(chunk))
+    new_embeddings = openai.Embedding.create(
+        input=chunk,
+        model=model_name,
+    )
+    new_embeds = [record['embedding'] for record in new_embeddings['data']]
+    embeds.extend(new_embeds)
+
+print("Embeds length: ", len(embeds))
+
+pinecone.init(api_key=pinecone_api_key, environment=pinecone_env)
+
+index_name = 'zkappumstad'
+
+ids = [str(uuid4()) for _ in range(len(texts))]
+
+vectors = [(ids[i], embeds[i], {
+    "content": texts[i],
+    "metadata": metadatas[i]
+}) for i in range(len(texts))]
+
+print(vectors[35])
+
+
+
