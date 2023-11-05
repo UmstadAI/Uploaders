@@ -74,13 +74,20 @@ index = pinecone.Index(index_name)
 
 ids = [str(uuid4()) for _ in range(len(texts))]
 
+def dict_to_list_of_strings(input_dict):
+    result = []
+    for key, value in input_dict.items():
+        result.append(f'{key}: {value}')
+    return result
+
 vectors = [(ids[i], embeds[i], {
     "content": texts[i],
-    "metadata": metadatas[i]
+    "metadata": dict_to_list_of_strings(metadatas[i])
 }) for i in range(len(texts))]
 
 for i in range(0, len(vectors), 100):
     batch = vectors[i:i+100]
+    print("Upserting batch", i)
     index.upsert(batch)
 
 time.sleep(5)
