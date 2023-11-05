@@ -31,6 +31,12 @@ headers_to_split_on = [
 markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on)
 md_header_splitted_docs = [markdown_splitter.split_text(doc.page_content) for doc in docs]
 
-print(md_header_splitted_docs[0])
+# Char-level splits
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-# print(md_header_splitted_docs[0][1])
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=300, chunk_overlap=30
+)
+
+# Split
+splits = [text_splitter.split_documents(doc) for doc in md_header_splitted_docs]
