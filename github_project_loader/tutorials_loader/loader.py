@@ -36,7 +36,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 # SPLITTING
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=800, chunk_overlap=200
+    chunk_size=600, chunk_overlap=150
 )
 
 splitted_docs = [text_splitter.split_documents(doc) for doc in md_header_splitted_docs]
@@ -70,6 +70,7 @@ print("Embeds length: ", len(embeds))
 pinecone.init(api_key=pinecone_api_key, environment=pinecone_env)
 
 index_name = 'zkappumstad'
+index = pinecone.Index(index_name)
 
 ids = [str(uuid4()) for _ in range(len(texts))]
 
@@ -78,7 +79,11 @@ vectors = [(ids[i], embeds[i], {
     "metadata": metadatas[i]
 }) for i in range(len(texts))]
 
-print(vectors[35])
+for i in range(0, len(vectors), 100):
+    batch = vectors[i:i+100]
+    index.upsert(batch)
 
+time.sleep(5)
+print(index.describe_index_stats())
 
 
