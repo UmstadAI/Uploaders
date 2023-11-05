@@ -5,7 +5,7 @@ import pinecone
 import time
 
 from uuid import uuid4
-from langchain.document_loaders import UnstructuredMarkdownLoader
+from langchain.document_loaders import DirectoryLoader, TextLoader
 from langchain.text_splitter import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter, Language
 
 from dotenv import load_dotenv, find_dotenv
@@ -20,7 +20,7 @@ path_tutorial_docs = "../../doc_loader/files/docs2/zkapps/tutorials"
 files = os.listdir(path_tutorial_docs)
 
 md_files = [file for file in os.listdir(path_tutorial_docs) if file.endswith(".md")]
-docs = [UnstructuredMarkdownLoader(path_tutorial_docs + "/" + f, mode = "single").load()[0] for f in md_files]
+docs = DirectoryLoader(path_tutorial_docs + "/", glob="**/*.md", loader_cls=TextLoader, show_progress=True).load()
 
 headers_to_split_on = [
     ("#", "Header 1"),
@@ -31,4 +31,6 @@ headers_to_split_on = [
 markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on)
 md_header_splitted_docs = [markdown_splitter.split_text(doc.page_content) for doc in docs]
 
-print(md_header_splitted_docs[2])
+print(md_header_splitted_docs[0])
+
+# print(md_header_splitted_docs[0][1])
