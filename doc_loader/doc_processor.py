@@ -54,8 +54,8 @@ md_docs = [md_splitter.create_documents([markdown_text.page_content]) for markdo
 
 # SPLITTING
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size = 600,
-    chunk_overlap  = 150,
+    chunk_size = 512,
+    chunk_overlap  = 128,
 )
 
 # IMPORTANT VARIABLE
