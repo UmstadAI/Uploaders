@@ -81,8 +81,8 @@ def dict_to_list_of_strings(input_dict):
     return result
 
 vectors = [(ids[i], embeds[i], {
-    "content": texts[i],
-    "metadata": dict_to_list_of_strings(metadatas[i])
+    "text": texts[i],
+    "title": dict_to_list_of_strings(metadatas[i])
 }) for i in range(len(texts))]
 
 for i in range(0, len(vectors), 100):
