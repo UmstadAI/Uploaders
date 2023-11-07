@@ -64,6 +64,7 @@ print("Have", len(chunks), "chunks")
 print("Last chunk has", len(chunks[-1]), "texts")
 
 for chunk, i in zip(chunks, range(len(chunks))):
+    chunk = [i.replace('', "NONE") if i=='' else i for i in chunk]
     print("Chunk", i, "of", len(chunk))
     new_embeddings = openai.Embedding.create(
         input=chunk,
