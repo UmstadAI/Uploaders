@@ -36,7 +36,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 # SPLITTING
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=600, chunk_overlap=120
+    chunk_size=600, chunk_overlap=150
 )
 
 splitted_docs = [text_splitter.split_documents(doc) for doc in md_header_splitted_docs]
@@ -45,12 +45,12 @@ splitted_docs = [text_splitter.split_documents(doc) for doc in md_header_splitte
 model_name = 'text-embedding-ada-002'
 texts = [t.page_content for c in splitted_docs for t in c]
 
-print("Created", len(texts), "texts")
+metadatas = [t.metadata for c in splitted_docs for t in c]
+print("Created", len(metadatas), "texts")
 
-chunks = [texts[i:(i + 1000) if (i+1000) <  len(texts) else len(texts)] for i in range(0, len(texts), 1000)]
+chunks = [metadatas[i:(i + 1000) if (i+1000) <  len(metadatas) else len(metadatas)] for i in range(0, len(metadatas), 1000)]
 embeds = []
 
-metadatas = [t.metadata for c in splitted_docs for t in c]
 print("Metadatas length: ", len(metadatas))
 
 print("Have", len(chunks), "chunks")
