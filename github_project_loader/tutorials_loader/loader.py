@@ -45,13 +45,21 @@ splitted_docs = [text_splitter.split_documents(doc) for doc in md_header_splitte
 model_name = 'text-embedding-ada-002'
 texts = [t.page_content for c in splitted_docs for t in c]
 
-metadatas = [t.metadata for c in splitted_docs for t in c]
-print("Created", len(metadatas), "texts")
+def dict_to_list_of_strings(input_dict):
+    result = []
+    for key, value in input_dict.items():
+        result.append(f'{key}: {value}')
+    return result
 
-chunks = [metadatas[i:(i + 1000) if (i+1000) <  len(metadatas) else len(metadatas)] for i in range(0, len(metadatas), 1000)]
+metadatas = [t.metadata for c in splitted_docs for t in c]
+string_metadatas = [" ".join(dict_to_list_of_strings(i)) for i in metadatas]
+print("Created", len(string_metadatas), "texts")
+
+chunks = [string_metadatas[i:(i + 1000) if (i+1000) <  len(string_metadatas) else len(string_metadatas)] for i in range(0, len(string_metadatas), 1000)]
+print(chunks[0])
 embeds = []
 
-print("Metadatas length: ", len(metadatas))
+print("Metadatas length: ", len(string_metadatas))
 
 print("Have", len(chunks), "chunks")
 print("Last chunk has", len(chunks[-1]), "texts")
@@ -73,12 +81,6 @@ index_name = 'zkappumstad'
 index = pinecone.Index(index_name)
 
 ids = [str(uuid4()) for _ in range(len(texts))]
-
-def dict_to_list_of_strings(input_dict):
-    result = []
-    for key, value in input_dict.items():
-        result.append(f'{key}: {value}')
-    return result
 
 vectors = [(ids[i], embeds[i], {
     "text": texts[i],
