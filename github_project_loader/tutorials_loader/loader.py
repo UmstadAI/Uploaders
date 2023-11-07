@@ -36,7 +36,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 # SPLITTING
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=600, chunk_overlap=150
+    chunk_size=800, chunk_overlap=128
 )
 
 splitted_docs = [text_splitter.split_documents(doc) for doc in md_header_splitted_docs]
@@ -56,7 +56,6 @@ string_metadatas = [" ".join(dict_to_list_of_strings(i)) for i in metadatas]
 print("Created", len(string_metadatas), "texts")
 
 chunks = [string_metadatas[i:(i + 1000) if (i+1000) <  len(string_metadatas) else len(string_metadatas)] for i in range(0, len(string_metadatas), 1000)]
-print(chunks[0])
 embeds = []
 
 print("Metadatas length: ", len(string_metadatas))
