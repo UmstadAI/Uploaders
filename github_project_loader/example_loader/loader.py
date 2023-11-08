@@ -34,7 +34,7 @@ texts = [c.page_content for c in docs]
 def extract_comments_from_ts_code(ts_code):
     comment_pattern = r'(\/\/[^\n]*|\/\*[\s\S]*?\*\/)'
     comments = re.findall(comment_pattern, ts_code)
-    comments_string = ' '.join(comments)
+    comments_string = ' '.join(comment.strip('/*').strip('*/').strip('//').strip() for comment in comments)
 
     return comments_string
 
@@ -67,6 +67,8 @@ pinecone.create_index(
     metric='dotproduct',
     dimension=1536
 ) 
+
+time.sleep(5)
 
 while not pinecone.describe_index(index_name).status['ready']:
         time.sleep(1)
