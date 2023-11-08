@@ -57,3 +57,4 @@ env/
 **/files/
 doc_loader/.DS_Store
 github_loader/output.csv
+github_project_loader/example_loader/examples
