@@ -16,11 +16,9 @@ def download_github_folder(username, repository, branch, folder_path, target_dir
 
         with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
             zip_ref.extractall(target_directory)
-            # Move the extracted folder to the correct location
             extracted_folder_path = os.path.join(target_directory, f"{repository}-{branch}", folder_path)
             shutil.move(extracted_folder_path, os.path.join(target_directory, folder_path))
 
-        # Clean up temporary zip file and extracted folder
         os.remove(zip_file_path)
         shutil.rmtree(os.path.join(target_directory, f"{repository}-{branch}"))
 
