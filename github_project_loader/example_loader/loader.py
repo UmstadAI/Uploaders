@@ -23,4 +23,3 @@ ts_splitter = RecursiveCharacterTextSplitter.from_language(
 )
 
 splitted_docs = ts_splitter.split_documents(docs)
-print(splitted_docs[23])

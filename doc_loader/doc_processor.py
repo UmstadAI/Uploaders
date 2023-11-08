@@ -98,7 +98,6 @@ pinecone.create_index(
     dimension=1536
 ) 
 
-
 while not pinecone.describe_index(index_name).status['ready']:
         time.sleep(1)
 
