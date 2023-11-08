@@ -36,7 +36,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 # SPLITTING
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=800, chunk_overlap=128
+    chunk_size=600, chunk_overlap=120
 )
 
 splitted_docs = [text_splitter.split_documents(doc) for doc in md_header_splitted_docs]
