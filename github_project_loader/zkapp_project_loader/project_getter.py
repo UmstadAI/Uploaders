@@ -2,8 +2,6 @@ import os
 import glob
 import pygit2
 
-from github import Github
-
 from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv(), override=True) # read local .env file
 
