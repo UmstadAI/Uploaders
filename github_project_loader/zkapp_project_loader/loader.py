@@ -166,15 +166,16 @@ projects = [
    
 ]
 
+# TODO: Have some problem these project
 additional_projects = [
     "https://github.com/chainwayxyz/mCash",
     "https://github.com/mitschabaude/snarkyjs-sudoku",
     "https://github.com/yunus433/snarkyjs-math",
 ]
 
-for project in additional_projects:
+for project in projects:
     parts = project.strip('/').split('/')
     owner, repo = parts[-2], parts[-1]
     project_loader(owner, repo)
     print("Upserted: ", repo, "from", owner)
-    time.sleep(10)
+    time.sleep(1)
