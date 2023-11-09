@@ -165,4 +165,4 @@ for project in projects:
     owner, repo = parts[-2], parts[-1]
     project_loader(owner, repo)
     print("Upserted: ", repo, "from", owner)
-    time.sleep(7)
+    time.sleep(10)
