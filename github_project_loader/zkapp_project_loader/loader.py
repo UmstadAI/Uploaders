@@ -101,8 +101,6 @@ def project_loader(owner, project_name):
         texts.append(doc.page_content)
         metadatas.append(metadata)
 
-    print(metadatas[1])
-
     chunks = [texts[i:(i + 1000) if (i+1000) <  len(texts) else len(texts)] for i in range(0, len(texts), 1000)]
     embeds = []
 
