@@ -36,6 +36,7 @@ pinecone.init(api_key=pinecone_api_key, environment=pinecone_env)
 
 index_name = 'zkappumstad-projects'
 
+# Delete/Comment if you want to upload MORE
 if index_name in pinecone.list_indexes():
     pinecone.delete_index(index_name)
 
@@ -46,6 +47,7 @@ pinecone.create_index(
 ) 
 
 time.sleep(5)
+# To here
 
 def project_loader(owner, project_name):
     g = Github(token)
@@ -116,6 +118,9 @@ def project_loader(owner, project_name):
         new_embeds = [record['embedding'] for record in new_embeddings['data']]
         embeds.extend(new_embeds)
 
+        # add time sleep if you encounter embedding token rate limit issue
+        # time.sleep(10)
+
     while not pinecone.describe_index(index_name).status['ready']:
             time.sleep(1)
 
@@ -143,6 +148,11 @@ def project_loader(owner, project_name):
     print(index.describe_index_stats())
 
 # PROJECTS
+"""
+Need to separate links because of embedding rate limit, sleep does not work. 
+Also need additional uploads. Before uploading additionally, do not forget to remove create/delete index logic from top. 
+"""
+
 projects = [
     "https://github.com/rpanic/vale-ui",
     "https://github.com/pico-labs/coinflip-executor-contract",
@@ -150,17 +160,19 @@ projects = [
     "https://github.com/sausage-dog/minanite",
     "https://github.com/iammadab/dark-chess",
     "https://github.com/gretzke/zkApp-data-types",
-    "https://github.com/adrian-gierakowski/fba-on-mina",
-    "https://github.com/chainwayxyz/mCash",
     "https://github.com/Sr-santi/mina-ui",
     "https://github.com/Trivo25/offchain-voting-poc",
-    "https://github.com/mitschabaude/snarkyjs-sudoku",
     "https://github.com/gordonfreemanfree/snarkyjs-ml",
+   
+]
+
+additional_projects = [
+    "https://github.com/chainwayxyz/mCash",
+    "https://github.com/mitschabaude/snarkyjs-sudoku",
     "https://github.com/yunus433/snarkyjs-math",
 ]
 
-
-for project in projects:
+for project in additional_projects:
     parts = project.strip('/').split('/')
     owner, repo = parts[-2], parts[-1]
     project_loader(owner, repo)
