@@ -60,7 +60,8 @@ def project_loader(owner, project_name):
 
     if project_description is None:
         read_me = repo.get_readme()
-        project_description = base64.b64decode(read_me.content)
+        # project_description = export_project_description_from_readme(base64.b64decode(read_me.content))
+        project_description = project_name
 
     loader = GenericLoader.from_filesystem(
         base_dir,
@@ -90,15 +91,17 @@ def project_loader(owner, project_name):
     metadatas = []
 
     for doc in docs:
-        metadata = [
-            project_name,
-            project_description,
-            doc.metadata['source'],
-            extract_comments_from_ts_code(doc.page_content),
-        ]
+        metadata = {
+            "Project Name": project_name,
+            "Project Description": project_description,
+            "File Name": doc.metadata['source'],
+            "Project content": extract_comments_from_ts_code(doc.page_content),
+        }
 
         texts.append(doc.page_content)
-        metadatas.append(" ".join(metadata))
+        metadatas.append(metadata)
+
+    print(metadatas[1])
 
     chunks = [texts[i:(i + 1000) if (i+1000) <  len(texts) else len(texts)] for i in range(0, len(texts), 1000)]
     embeds = []
@@ -122,12 +125,16 @@ def project_loader(owner, project_name):
 
     ids = [str(uuid4()) for _ in range(len(docs))]
 
+    def dict_to_list_of_strings(input_dict):
+        result = []
+        for key, value in input_dict.items():
+            result.append(f'{key}: {value}')
+        return result
+
     vectors = [(ids[i], embeds[i], {
         'text': docs[i].page_content, 
-        'title': metadatas[i]
+        'title': dict_to_list_of_strings(metadatas[i])
     }) for i in range(len(docs))]
-
-    print(vectors[23])
 
     namespace = "zkappumstad-projects"
     for i in range(0, len(vectors), 100):
