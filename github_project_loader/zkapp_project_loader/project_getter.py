@@ -34,4 +34,3 @@ def clone_github_project(repo_link):
 
 for repo_link in projects:
     clone_github_project(repo_link)
-

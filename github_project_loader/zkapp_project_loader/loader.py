@@ -166,3 +166,4 @@ for project in projects:
     parts = project.strip('/').split('/')
     owner, repo = parts[-2], parts[-1]
     project_loader(owner, repo)
+    print("Upserted: ", repo, "from", owner)
