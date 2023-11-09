@@ -144,5 +144,25 @@ def project_loader(owner, project_name):
 
     print(index.describe_index_stats())
 
+# PROJECTS
+projects = [
+    "https://github.com/rpanic/vale-ui",
+    "https://github.com/pico-labs/coinflip-executor-contract",
+    "https://github.com/alysiahuggins/proof-of-ownership-zkapp",
+    "https://github.com/sausage-dog/minanite",
+    "https://github.com/iammadab/dark-chess",
+    "https://github.com/gretzke/zkApp-data-types",
+    "https://github.com/adrian-gierakowski/fba-on-mina",
+    "https://github.com/chainwayxyz/mCash",
+    "https://github.com/Sr-santi/mina-ui",
+    "https://github.com/Trivo25/offchain-voting-poc",
+    "https://github.com/mitschabaude/snarkyjs-sudoku",
+    "https://github.com/gordonfreemanfree/snarkyjs-ml",
+    "https://github.com/yunus433/snarkyjs-math",
+]
 
-project_loader("Sr-santi", "mina-ui")
+
+for project in projects:
+    parts = project.strip('/').split('/')
+    owner, repo = parts[-2], parts[-1]
+    project_loader(owner, repo)
