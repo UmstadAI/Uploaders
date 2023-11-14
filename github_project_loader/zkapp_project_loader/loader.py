@@ -68,7 +68,7 @@ def project_loader(owner, project_name):
     loader = GenericLoader.from_filesystem(
         base_dir,
         glob="**/*",
-        suffixes=[".ts", ".js", ".json", "jsx", "tsx"],
+        suffixes=[".ts", "jsx", "tsx"],
         parser=LanguageParser(),
     )
 
@@ -102,6 +102,7 @@ def project_loader(owner, project_name):
 
         texts.append(doc.page_content)
         metadatas.append(metadata)
+        print(doc)
 
     chunks = [texts[i:(i + 1000) if (i+1000) <  len(texts) else len(texts)] for i in range(0, len(texts), 1000)]
     embeds = []
@@ -117,7 +118,7 @@ def project_loader(owner, project_name):
         )
         new_embeds = [record['embedding'] for record in new_embeddings['data']]
         embeds.extend(new_embeds)
-
+        time.sleep(15)
         # add time sleep if you encounter embedding token rate limit issue
         # time.sleep(10)
 
@@ -156,25 +157,27 @@ Also need additional uploads. Before uploading additionally, do not forget to re
 projects = [
     "https://github.com/rpanic/vale-ui",
     "https://github.com/pico-labs/coinflip-executor-contract",
-    "https://github.com/alysiahuggins/proof-of-ownership-zkapp",
     "https://github.com/sausage-dog/minanite",
     "https://github.com/iammadab/dark-chess",
     "https://github.com/gretzke/zkApp-data-types",
     "https://github.com/Sr-santi/mina-ui",
     "https://github.com/Trivo25/offchain-voting-poc",
     "https://github.com/gordonfreemanfree/snarkyjs-ml",
-   
-]
-
-additional_projects = [
     "https://github.com/chainwayxyz/mCash",
+    "https://github.com/alysiahuggins/proof-of-ownership-zkapp",
     "https://github.com/mitschabaude/snarkyjs-sudoku",
     "https://github.com/yunus433/snarkyjs-math",
 ]
 
-for project in additional_projects:
+additional_projects = [
+    "https://github.com/chainwayxyz/mCash",
+    "https://github.com/alysiahuggins/proof-of-ownership-zkapp",
+    "https://github.com/mitschabaude/snarkyjs-sudoku",
+    "https://github.com/yunus433/snarkyjs-math",
+]
+
+for project in projects:
     parts = project.strip('/').split('/')
     owner, repo = parts[-2], parts[-1]
     project_loader(owner, repo)
     print("Upserted: ", repo, "from", owner)
-    time.sleep(10)
