@@ -8,7 +8,6 @@ headers = {
 }
 
 def get_blog_links(url):
-    
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.content, 'html.parser')
     
@@ -27,15 +26,16 @@ for page in range(1, 18):
 
     blogs.extend(blog_links)
 
+blogs = list(set(blogs))
+
 docs = []
 for batch in range(0, len(blogs), 10):
-    print(batch)
+    print("Batch", batch)
     loader = WebBaseLoader(blogs[batch:batch+10])
     data = loader.load()
     docs.extend(data)
 
-print(docs)
-print(len(docs))
+
 
     
 
