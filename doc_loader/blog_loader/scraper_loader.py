@@ -45,7 +45,7 @@ def get_and_load():
     blogs = list(set(blogs))
 
     docs = []
-    for batch in range(0, len(blogs), 10):
+    for batch in range(0, len(blogs)//5, 10):
         print("Batch", batch)
         loader = WebBaseLoader(blogs[batch:batch+10])
         data = loader.load()
@@ -86,6 +86,7 @@ def upsert(docs):
         )
         new_embeds = [record['embedding'] for record in new_embeddings['data']]
         embeds.extend(new_embeds)
+        time.sleep(3)
 
     # PINECONE STORE
     pinecone.init(api_key=pinecone_api_key, environment=pinecone_env)
