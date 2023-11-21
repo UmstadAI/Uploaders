@@ -1,10 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 
+from langchain.document_loaders import WebBaseLoader
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/119.0'
+}
+
 def get_blog_links(url):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/119.0'
-    }
+    
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.content, 'html.parser')
     
@@ -23,4 +27,16 @@ for page in range(1, 18):
 
     blogs.extend(blog_links)
 
+docs = []
+for batch in range(0, len(blogs), 10):
+    print(batch)
+    loader = WebBaseLoader(blogs[batch:batch+10])
+    data = loader.load()
+    docs.extend(data)
 
+print(docs)
+print(len(docs))
+
+    
+
+    
