@@ -59,7 +59,3 @@ for repo in repos:
         os.mkdir(f"files/{repo_name}")
 
     get_files(contents, repo_name, "")
-
-            
-
-
