@@ -8,14 +8,18 @@ from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv(), override=True) # read local .env file
 
 def export_project_description_from_readme(content):
-    pattern = r'^#\s+(.+?)\n\n(.*?)\n\n'
-    match = re.search(pattern, content.decode('utf-8'), re.DOTALL)
+    decoded_content = bytes(str(content), "utf-8").decode("unicode_escape")
+    cleaned_content = re.sub(r'# ', '', decoded_content)
+    emoji_pattern = re.compile("["
+                           u"\U0001F600-\U0001F64F"  # emoticons
+                           u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                           u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                           u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                           "]+", flags=re.UNICODE)
+    cleaned_content = re.sub(r'```.*?```', '', cleaned_content, flags=re.DOTALL)
+    cleaned_content = emoji_pattern.sub(r'', cleaned_content)
 
-    if match:
-        print("Found project description in README.md", match.group(2).strip())
-        return match.group(2).strip()
-    else:
-        return None
+    return cleaned_content[:1000]
 
 def test_description_extraction(owner, project_name):
     token = os.getenv('GITHUB_ACCESS_TOKEN') or 'GITHUB_ACCESS_TOKEN'
@@ -29,8 +33,6 @@ def test_description_extraction(owner, project_name):
         read_me = repo.get_readme()
         project_description = export_project_description_from_readme(base64.b64decode(read_me.content))
         print("Project description of ", project_name, "DESCRIPTION: ", project_description)
-
-    print(project_description)
 
 projects = [
     "https://github.com/rpanic/vale-ui",

@@ -56,7 +56,7 @@ def project_loader(owner, project_name):
     project_description = repo.description
     
     def export_project_description_from_readme(content):
-        pattern = r'^#\s+(.+?)\n\n(.*?)\n\n'
+        pattern = r'^#\s*(.+?)\s*\n+([^#]+)'
         match = re.search(pattern, content, re.DOTALL)
 
         if match:
