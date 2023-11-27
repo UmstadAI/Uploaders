@@ -47,7 +47,6 @@ pinecone.create_index(
 ) 
 
 time.sleep(5)
-# To here
 
 def project_loader(owner, project_name):
     g = Github(token)
@@ -69,7 +68,7 @@ def project_loader(owner, project_name):
     if project_description is None:
         read_me = repo.get_readme()
         project_description = export_project_description_from_readme(base64.b64decode(read_me.content))
-        project_description = project_name
+        print("Project description from README.md", project_description)
 
     loader = GenericLoader.from_filesystem(
         base_dir,
