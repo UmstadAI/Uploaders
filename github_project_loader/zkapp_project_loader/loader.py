@@ -168,7 +168,6 @@ projects = [
     "https://github.com/Sr-santi/mina-ui",
     "https://github.com/Trivo25/offchain-voting-poc",
     "https://github.com/gordonfreemanfree/snarkyjs-ml",
-   
 ]
 
 # TODO: Have some problem these project

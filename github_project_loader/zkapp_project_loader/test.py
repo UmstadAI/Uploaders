@@ -1,38 +1,50 @@
-import unittest
+import re
 import os
 import base64
 
-from loader import export_project_description_from_readme
 from github import Github
+from dotenv import load_dotenv, find_dotenv
 
-class TestReadmeParser(unittest.TestCase):
-    def test_description_extraction(self, owner, project_name):
-        token = os.getenv('GITHUB_ACCESS_TOKEN') or 'GITHUB_ACCESS_TOKEN'
+_ = load_dotenv(find_dotenv(), override=True) # read local .env file
 
-        g = Github(token)
-        repo = g.get_repo(f"{owner}/{project_name}")
+def export_project_description_from_readme(content):
+    pattern = r'^#\s+(.+?)\n\n(.*?)\n\n'
+    match = re.search(pattern, content.decode('utf-8'), re.DOTALL)
 
-        base_dir = f'./projects/{project_name}'
-        project_description = repo.description
+    if match:
+        print("Found project description in README.md", match.group(2).strip())
+        return match.group(2).strip()
+    else:
+        return None
 
-        if project_description is None:
-            read_me = repo.get_readme()
-            project_description = export_project_description_from_readme(base64.b64decode(read_me.content))
-            print("Project description from README.md", project_description)
+def test_description_extraction(owner, project_name):
+    token = os.getenv('GITHUB_ACCESS_TOKEN') or 'GITHUB_ACCESS_TOKEN'
 
-        print(project_description)
+    g = Github(token)
+    repo = g.get_repo(f"{owner}/{project_name}")
 
-    def test_no_description(self):
-        # Test case where there's no description after the H1 heading
-        content = "# Project Title\n\n## Next Section"
-        self.assertIsNone(export_project_description_from_readme(content))
+    project_description = repo.description
 
-    def test_no_heading(self):
-        # Test case where there's no H1 heading
-        content = "This is some content without a heading."
-        self.assertIsNone(export_project_description_from_readme(content))
+    if project_description is None:
+        read_me = repo.get_readme()
+        project_description = export_project_description_from_readme(base64.b64decode(read_me.content))
+        print("Project description of ", project_name, "DESCRIPTION: ", project_description)
 
-    # Add more test cases as needed to cover different scenarios
+    print(project_description)
 
-if __name__ == '__main__':
-    unittest.main()
+projects = [
+    "https://github.com/rpanic/vale-ui",
+    "https://github.com/pico-labs/coinflip-executor-contract",
+    "https://github.com/alysiahuggins/proof-of-ownership-zkapp",
+    "https://github.com/sausage-dog/minanite",
+    "https://github.com/iammadab/dark-chess",
+    "https://github.com/gretzke/zkApp-data-types",
+    "https://github.com/Sr-santi/mina-ui",
+    "https://github.com/Trivo25/offchain-voting-poc",
+    "https://github.com/gordonfreemanfree/snarkyjs-ml",
+]
+
+for project in projects:
+    parts = project.strip('/').split('/')
+    owner, repo = parts[-2], parts[-1]
+    test_description_extraction(owner, repo)
