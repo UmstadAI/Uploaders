@@ -57,12 +57,18 @@ def project_loader(owner, project_name):
     project_description = repo.description
     
     def export_project_description_from_readme(content):
-        # TODO: Create a function which exports project description from readMe content
-        pass
+        pattern = r'^#\s+(.+?)\n\n(.*?)\n\n'
+        match = re.search(pattern, content, re.DOTALL)
+
+        if match:
+            print("Found project description in README.md", match.group(2).strip())
+            return match.group(2).strip()
+        else:
+            return None
 
     if project_description is None:
         read_me = repo.get_readme()
-        # project_description = export_project_description_from_readme(base64.b64decode(read_me.content))
+        project_description = export_project_description_from_readme(base64.b64decode(read_me.content))
         project_description = project_name
 
     loader = GenericLoader.from_filesystem(
