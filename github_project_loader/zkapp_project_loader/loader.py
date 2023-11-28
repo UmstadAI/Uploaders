@@ -145,10 +145,13 @@ def project_loader(owner, project_name):
         for key, value in input_dict.items():
             result.append(f'{key}: {value}')
         return result
+    
+    vector_type = os.getenv('PROJECT_VECTOR_TYPE') or 'PROJECT_VECTOR_TYPE'
 
     vectors = [(ids[i], embeds[i], {
         'text': docs[i].page_content, 
-        'title': dict_to_list_of_strings(metadatas[i])
+        'title': dict_to_list_of_strings(metadatas[i]),
+        'vector_type': vector_type
     }) for i in range(len(docs))]
 
     namespace = "zkappumstad-projects"

@@ -82,9 +82,12 @@ index = pinecone.Index(index_name)
 
 ids = [str(uuid4()) for _ in range(len(texts))]
 
+vector_type = os.getenv('DOCS_VECTOR_TYPE') or 'DOCS_VECTOR_TYPE'
+
 vectors = [(ids[i], embeds[i], {
     "text": texts[i],
-    "title": dict_to_list_of_strings(metadatas[i])
+    "title": dict_to_list_of_strings(metadatas[i]),
+    "vector_type": vector_type,
 }) for i in range(len(texts))]
 
 for i in range(0, len(vectors), 100):

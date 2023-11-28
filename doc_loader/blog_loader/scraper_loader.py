@@ -97,9 +97,13 @@ def upsert(docs):
 
     ids = [str(uuid4()) for _ in range(len(splitted_docs))]
 
+    vector_type = os.getenv('DOCS_VECTOR_TYPE') or 'DOCS_VECTOR_TYPE'
+
     vectors = [(ids[i], embeds[i], {
         'text': texts[i], 
-        'title': metadatas[i]['title']}) for i in range(len(splitted_docs))]
+        'title': metadatas[i]['title'],
+        'vector_type': vector_type,
+    }) for i in range(len(splitted_docs))]
 
     for i in range(0, len(vectors), 100):
         print("Upsertin Batch", i)
