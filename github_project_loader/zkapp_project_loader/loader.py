@@ -47,7 +47,6 @@ pinecone.create_index(
 ) 
 
 time.sleep(5)
-# To here
 
 def project_loader(owner, project_name):
     g = Github(token)
@@ -57,18 +56,31 @@ def project_loader(owner, project_name):
     project_description = repo.description
     
     def export_project_description_from_readme(content):
-        # TODO: Create a function which exports project description from readMe content
-        pass
+        decoded_content = bytes(str(content), "utf-8").decode("unicode_escape")
+        cleaned_content = re.sub(r'# ', '', decoded_content)
+        cleaned_content = re.sub(r'#', '', cleaned_content)
+
+        emoji_pattern = re.compile("["
+                            u"\U0001F600-\U0001F64F"  # emoticons
+                            u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                            u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                            "]+", flags=re.UNICODE)
+        
+        cleaned_content = re.sub(r'```.*?```', '', cleaned_content, flags=re.DOTALL)
+        cleaned_content = emoji_pattern.sub(r'', cleaned_content)
+
+        return cleaned_content[:850]
 
     if project_description is None:
         read_me = repo.get_readme()
-        # project_description = export_project_description_from_readme(base64.b64decode(read_me.content))
-        project_description = project_name
+        project_description = export_project_description_from_readme(base64.b64decode(read_me.content))
+        print("Project description from README.md", project_description)
 
     loader = GenericLoader.from_filesystem(
         base_dir,
         glob="**/*",
-        suffixes=[".ts", ".js", ".json", "jsx", "tsx"],
+        suffixes=[".ts"],
         parser=LanguageParser(),
     )
 
@@ -118,8 +130,8 @@ def project_loader(owner, project_name):
         new_embeds = [record['embedding'] for record in new_embeddings['data']]
         embeds.extend(new_embeds)
 
-        # add time sleep if you encounter embedding token rate limit issue
-        # time.sleep(10)
+        # add time sleep if you encounter embedding token rate limit issue
+        time.sleep(7)
 
     while not pinecone.describe_index(index_name).status['ready']:
             time.sleep(1)
@@ -143,7 +155,7 @@ def project_loader(owner, project_name):
     for i in range(0, len(vectors), 100):
         batch = vectors[i:i+100]
         print("Upserting batch:", i)
-        index.upsert(batch, namespace=namespace)
+        index.upsert(batch)
 
     print(index.describe_index_stats())
 
@@ -163,7 +175,16 @@ projects = [
     "https://github.com/Sr-santi/mina-ui",
     "https://github.com/Trivo25/offchain-voting-poc",
     "https://github.com/gordonfreemanfree/snarkyjs-ml",
-   
+    "https://github.com/chainwayxyz/mCash",
+    "https://github.com/mitschabaude/snarkyjs-sudoku",
+    "https://github.com/yunus433/snarkyjs-math",
+    "https://github.com/RaidasGrisk/zkapp-ui",
+    "https://github.com/jackryanservia/wordle",
+    "https://github.com/anandcsingh/rankproof",
+    "https://github.com/mina-arena/Contracts",
+    "https://github.com/zkHumans/zkHumans",
+    "https://github.com/zkHumans/zk-kv",
+    "https://github.com/racampos/cpone",
 ]
 
 # TODO: Have some problem these project
@@ -171,6 +192,7 @@ additional_projects = [
     "https://github.com/chainwayxyz/mCash",
     "https://github.com/mitschabaude/snarkyjs-sudoku",
     "https://github.com/yunus433/snarkyjs-math",
+    "https://github.com/Identicon-Dao/socialcap",
 ]
 
 for project in projects:
