@@ -56,14 +56,21 @@ def project_loader(owner, project_name):
     project_description = repo.description
     
     def export_project_description_from_readme(content):
-        pattern = r'^#\s*(.+?)\s*\n+([^#]+)'
-        match = re.search(pattern, content, re.DOTALL)
+        decoded_content = bytes(str(content), "utf-8").decode("unicode_escape")
+        cleaned_content = re.sub(r'# ', '', decoded_content)
+        cleaned_content = re.sub(r'#', '', cleaned_content)
 
-        if match:
-            print("Found project description in README.md", match.group(2).strip())
-            return match.group(2).strip()
-        else:
-            return None
+        emoji_pattern = re.compile("["
+                            u"\U0001F600-\U0001F64F"  # emoticons
+                            u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                            u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                            "]+", flags=re.UNICODE)
+        
+        cleaned_content = re.sub(r'```.*?```', '', cleaned_content, flags=re.DOTALL)
+        cleaned_content = emoji_pattern.sub(r'', cleaned_content)
+
+        return cleaned_content[:850]
 
     if project_description is None:
         read_me = repo.get_readme()
@@ -168,6 +175,9 @@ projects = [
     "https://github.com/Sr-santi/mina-ui",
     "https://github.com/Trivo25/offchain-voting-poc",
     "https://github.com/gordonfreemanfree/snarkyjs-ml",
+    "https://github.com/chainwayxyz/mCash",
+    "https://github.com/mitschabaude/snarkyjs-sudoku",
+    "https://github.com/yunus433/snarkyjs-math",
 ]
 
 # TODO: Have some problem these project
