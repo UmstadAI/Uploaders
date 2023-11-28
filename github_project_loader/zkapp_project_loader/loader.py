@@ -182,7 +182,6 @@ projects = [
     "https://github.com/jackryanservia/wordle",
     "https://github.com/anandcsingh/rankproof",
     "https://github.com/mina-arena/Contracts",
-    "https://github.com/Identicon-Dao/socialcap",
     "https://github.com/zkHumans/zkHumans",
     "https://github.com/zkHumans/zk-kv",
     "https://github.com/racampos/cpone",
@@ -193,6 +192,7 @@ additional_projects = [
     "https://github.com/chainwayxyz/mCash",
     "https://github.com/mitschabaude/snarkyjs-sudoku",
     "https://github.com/yunus433/snarkyjs-math",
+    "https://github.com/Identicon-Dao/socialcap",
 ]
 
 for project in projects:
