@@ -10,16 +10,19 @@ _ = load_dotenv(find_dotenv(), override=True) # read local .env file
 def export_project_description_from_readme(content):
     decoded_content = bytes(str(content), "utf-8").decode("unicode_escape")
     cleaned_content = re.sub(r'# ', '', decoded_content)
+    cleaned_content = re.sub(r'#', '', cleaned_content)
+
     emoji_pattern = re.compile("["
                            u"\U0001F600-\U0001F64F"  # emoticons
                            u"\U0001F300-\U0001F5FF"  # symbols & pictographs
                            u"\U0001F680-\U0001F6FF"  # transport & map symbols
                            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
                            "]+", flags=re.UNICODE)
+    
     cleaned_content = re.sub(r'```.*?```', '', cleaned_content, flags=re.DOTALL)
     cleaned_content = emoji_pattern.sub(r'', cleaned_content)
 
-    return cleaned_content[:1000]
+    return cleaned_content[:850]
 
 def test_description_extraction(owner, project_name):
     token = os.getenv('GITHUB_ACCESS_TOKEN') or 'GITHUB_ACCESS_TOKEN'
