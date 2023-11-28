@@ -80,7 +80,7 @@ def project_loader(owner, project_name):
     loader = GenericLoader.from_filesystem(
         base_dir,
         glob="**/*",
-        suffixes=[".ts", ".js", ".json", "jsx", "tsx"],
+        suffixes=[".ts"],
         parser=LanguageParser(),
     )
 
@@ -130,8 +130,8 @@ def project_loader(owner, project_name):
         new_embeds = [record['embedding'] for record in new_embeddings['data']]
         embeds.extend(new_embeds)
 
-        # add time sleep if you encounter embedding token rate limit issue
-        # time.sleep(10)
+        # add time sleep if you encounter embedding token rate limit issue
+        time.sleep(7)
 
     while not pinecone.describe_index(index_name).status['ready']:
             time.sleep(1)
@@ -155,7 +155,7 @@ def project_loader(owner, project_name):
     for i in range(0, len(vectors), 100):
         batch = vectors[i:i+100]
         print("Upserting batch:", i)
-        index.upsert(batch, namespace=namespace)
+        index.upsert(batch)
 
     print(index.describe_index_stats())
 
@@ -178,6 +178,14 @@ projects = [
     "https://github.com/chainwayxyz/mCash",
     "https://github.com/mitschabaude/snarkyjs-sudoku",
     "https://github.com/yunus433/snarkyjs-math",
+    "https://github.com/RaidasGrisk/zkapp-ui",
+    "https://github.com/jackryanservia/wordle",
+    "https://github.com/anandcsingh/rankproof",
+    "https://github.com/mina-arena/Contracts",
+    "https://github.com/Identicon-Dao/socialcap",
+    "https://github.com/zkHumans/zkHumans",
+    "https://github.com/zkHumans/zk-kv",
+    "https://github.com/racampos/cpone",
 ]
 
 # TODO: Have some problem these project

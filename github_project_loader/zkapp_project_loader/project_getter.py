@@ -14,13 +14,20 @@ projects = [
     "https://github.com/sausage-dog/minanite",
     "https://github.com/iammadab/dark-chess",
     "https://github.com/gretzke/zkApp-data-types",
-    "https://github.com/adrian-gierakowski/fba-on-mina",
-    "https://github.com/chainwayxyz/mCash",
     "https://github.com/Sr-santi/mina-ui",
     "https://github.com/Trivo25/offchain-voting-poc",
-    "https://github.com/mitschabaude/snarkyjs-sudoku",
     "https://github.com/gordonfreemanfree/snarkyjs-ml",
+    "https://github.com/chainwayxyz/mCash",
+    "https://github.com/mitschabaude/snarkyjs-sudoku",
     "https://github.com/yunus433/snarkyjs-math",
+    "https://github.com/RaidasGrisk/zkapp-ui",
+    "https://github.com/jackryanservia/wordle",
+    "https://github.com/anandcsingh/rankproof",
+    "https://github.com/mina-arena/Contracts",
+    "https://github.com/Identicon-Dao/socialcap",
+    "https://github.com/zkHumans/zkHumans",
+    "https://github.com/zkHumans/zk-kv",
+    "https://github.com/racampos/cpone",
 ]
 
 os.makedirs('projects', exist_ok=True)
