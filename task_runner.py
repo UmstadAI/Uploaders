@@ -1,7 +1,6 @@
 import subprocess
 
 commands = [
-    'source venv/bin/activate',
     'cd doc_loader && python doc_processor.py',
     'cd doc_loader && python gitbook_loader.py',
     'cd doc_loader/blog_loader && python scraper_loader.py',
