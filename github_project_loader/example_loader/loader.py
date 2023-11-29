@@ -57,16 +57,16 @@ for chunk, i in zip(chunks, range(len(chunks))):
 
 pinecone.init(api_key=pinecone_api_key, environment=pinecone_env)
 
-index_name = 'zkappumstad-codebase'
+index_name = 'zkappumstad'
 
-if index_name in pinecone.list_indexes():
+""" if index_name in pinecone.list_indexes():
     pinecone.delete_index(index_name)
 
 pinecone.create_index(
     name=index_name,
     metric='dotproduct',
     dimension=1536
-) 
+)  """
 
 time.sleep(5)
 
@@ -87,10 +87,9 @@ vectors = [(ids[i], embeds[i], {
 
 print(vectors[23])
 
-namespace = "zkappumstad-codebase"
 for i in range(0, len(vectors), 100):
     batch = vectors[i:i+100]
     print("Upserting batch:", i)
-    index.upsert(batch, namespace=namespace)
+    index.upsert(batch)
 
 print(index.describe_index_stats())

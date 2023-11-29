@@ -34,10 +34,10 @@ pinecone_env = os.getenv('PINECONE_ENVIRONMENT') or "YOUR_ENV"
 
 pinecone.init(api_key=pinecone_api_key, environment=pinecone_env)
 
-index_name = 'zkappumstad-projects'
+index_name = 'zkappumstad'
 
 # Delete/Comment if you want to upload MORE
-if index_name in pinecone.list_indexes():
+""" if index_name in pinecone.list_indexes():
     pinecone.delete_index(index_name)
 
 pinecone.create_index(
@@ -46,7 +46,7 @@ pinecone.create_index(
     dimension=1536
 ) 
 
-time.sleep(5)
+time.sleep(5) """
 
 def project_loader(owner, project_name):
     g = Github(token)
@@ -154,7 +154,6 @@ def project_loader(owner, project_name):
         'vector_type': vector_type
     }) for i in range(len(docs))]
 
-    namespace = "zkappumstad-projects"
     for i in range(0, len(vectors), 100):
         batch = vectors[i:i+100]
         print("Upserting batch:", i)
