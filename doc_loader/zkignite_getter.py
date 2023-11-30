@@ -35,6 +35,22 @@ urls = [
     "https://github.com/anomix-zk/anomix-network",
     "https://github.com/EasyMina/easyMina",
     "https://github.com/devarend/mina-playground",
+    "https://github.com/devarend/binance-oracle",
+    "https://github.com/RaidasGrisk/zk-github-oracle",
+    "https://github.com/ArturVargas/mina-oracle",
+    "https://github.com/Raunaque97/privateVRF",
+    "https://github.com/a6b8/mina-zk-ignite-cohort-0",
+    "https://github.com/rhvall/ConOracle-Osmosis",
+    "https://github.com/ubinix-warun/zkOracle-OCW",
+    "https://github.com/orkunkilic/mina-decentralized-price-feed",
+    "https://github.com/pico-labs/randomness-oracle",
+    "https://github.com/iam-robi/zkapp-monorepo",
+    "https://github.com/magestrio/bet-oracle",
+    "https://github.com/coldstar1993/Voracle",
+    "https://github.com/sqrt-xx/grin-oracle",
+    "https://github.com/chucklam/mina-geoip-oracle",
+    "https://github.com/Comdex/price-zkoracle",
+    "https://github.com/lognorman20/zk-dog-oracle",
 ]
 
 if not os.path.exists(f"files/zkignite_docs"):

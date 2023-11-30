@@ -190,6 +190,7 @@ projects = [
     "https://github.com/SutuLabs/MinaCTF",
     "https://github.com/WalletZkApp/zk-keyless-wallet-contracts",
     "https://github.com/AdMetaNetwork/admeta-mina-chort-1",
+    "https://github.com/devarend/binance-oracle"
 ]
 
 # TODO: Have some problem these project
