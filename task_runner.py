@@ -1,5 +1,7 @@
 import subprocess
 
+
+# not included getting files or downloading files! please get them before running this script
 commands = [
     'cd doc_loader && python doc_processor.py',
     'cd doc_loader && python gitbook_loader.py',

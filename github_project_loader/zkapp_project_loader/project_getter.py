@@ -24,10 +24,12 @@ projects = [
     "https://github.com/jackryanservia/wordle",
     "https://github.com/anandcsingh/rankproof",
     "https://github.com/mina-arena/Contracts",
-    "https://github.com/Identicon-Dao/socialcap",
     "https://github.com/zkHumans/zkHumans",
     "https://github.com/zkHumans/zk-kv",
     "https://github.com/racampos/cpone",
+    "https://github.com/SutuLabs/MinaCTF",
+    "https://github.com/WalletZkApp/zk-keyless-wallet-contracts",
+    "https://github.com/AdMetaNetwork/admeta-mina-chort-1",
 ]
 
 os.makedirs('projects', exist_ok=True)
