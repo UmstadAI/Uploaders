@@ -187,13 +187,13 @@ projects = [
     "https://github.com/zkHumans/zkHumans",
     "https://github.com/zkHumans/zk-kv",
     "https://github.com/racampos/cpone",
+    "https://github.com/SutuLabs/MinaCTF",
+    "https://github.com/WalletZkApp/zk-keyless-wallet-contracts",
+    "https://github.com/AdMetaNetwork/admeta-mina-chort-1",
 ]
 
 # TODO: Have some problem these project
 additional_projects = [
-    "https://github.com/chainwayxyz/mCash",
-    "https://github.com/mitschabaude/snarkyjs-sudoku",
-    "https://github.com/yunus433/snarkyjs-math",
     "https://github.com/Identicon-Dao/socialcap",
 ]
 
