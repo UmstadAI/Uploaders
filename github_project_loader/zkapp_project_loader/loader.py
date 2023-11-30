@@ -168,8 +168,6 @@ Also need additional uploads. Before uploading additionally, do not forget to re
 """
 
 projects = [
-    "https://github.com/WalletZkApp/zk-keyless-wallet-contracts",
-    "https://github.com/AdMetaNetwork/admeta-mina-chort-1",
     "https://github.com/rpanic/vale-ui",
     "https://github.com/pico-labs/coinflip-executor-contract",
     "https://github.com/alysiahuggins/proof-of-ownership-zkapp",
@@ -189,6 +187,9 @@ projects = [
     "https://github.com/zkHumans/zkHumans",
     "https://github.com/zkHumans/zk-kv",
     "https://github.com/racampos/cpone",
+    "https://github.com/SutuLabs/MinaCTF",
+    "https://github.com/WalletZkApp/zk-keyless-wallet-contracts",
+    "https://github.com/AdMetaNetwork/admeta-mina-chort-1",
 ]
 
 # TODO: Have some problem these project
