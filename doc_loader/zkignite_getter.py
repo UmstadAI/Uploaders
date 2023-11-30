@@ -5,8 +5,6 @@ import base64
 from github import Github
 
 from dotenv import load_dotenv, find_dotenv
-
-
 _ = load_dotenv(find_dotenv()) # read local .env file
 
 token = os.getenv('GITHUB_ACCESS_TOKEN') or 'GITHUB_ACCESS_TOKEN'
@@ -28,8 +26,7 @@ def download_readme(repo_url):
 
     return content.decode('utf-8')
 
-    
-    
+
 urls = [
     "https://github.com/rhvall/MinaDevContainer",
     "https://github.com/airgap-it/airgap-coin-lib",
