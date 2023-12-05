@@ -61,3 +61,4 @@ doc_loader/.DS_Store
 github_loader/output.csv
 issue_loader/output.csv
 *.csv
+issue_loader/output.csv
