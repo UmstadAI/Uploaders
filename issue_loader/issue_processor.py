@@ -8,7 +8,7 @@ import numpy as np
 df = pd.read_csv('output.csv')
 df = df[df['comments'].apply(lambda x: len(x) > 3)]
 
-os.mkdir('issues_json')
+os.mkdir('issues_txt')
 
 for index, row in df.iterrows():
     writer = row['writer']
