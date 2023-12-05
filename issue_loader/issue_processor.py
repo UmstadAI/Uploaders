@@ -166,19 +166,18 @@ for index in indexes:
 
     print(f"Processing {index}...")
     result = run_with_timeout(process_txt, [index], 60)
-    
-    if result is not None:
-        pompiko = result
+
     if result is None:
-        result = run_with_timeout(process_txt, [index], 60)
+        continue
 
-    file_path = f"issues_json/processed{index}.json"
+    if result is not None:
+        file_path = f"issues_json/processed{index}.json"
 
-    result = json.loads(result)
-    result.update(full_question)
-    
-    print(f"Saving {i}...")
-    with open(file_path, 'w') as file:
-        file.write(json.dumps(result, indent=4))
+        result = json.loads(result)
+        result.update(full_question)
+        
+        print(f"Saving {index}...")
+        with open(file_path, 'w') as file:
+            file.write(json.dumps(result, indent=4))
 
-    time.sleep(3)
+        time.sleep(3)
