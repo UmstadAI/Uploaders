@@ -6,6 +6,9 @@ import csv
 from github import Github
 from langchain.document_loaders import GitHubIssuesLoader
 
+from dotenv import load_dotenv, find_dotenv
+_ = load_dotenv(find_dotenv(), override=True) # read local .env file
+
 token = os.getenv('GITHUB_ACCESS_TOKEN') or 'GITHUB_ACCESS_TOKEN'
 
 loader = GitHubIssuesLoader(
