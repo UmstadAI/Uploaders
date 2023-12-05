@@ -20,7 +20,7 @@ def snake_case(string):
 
 # list of github repositories
 repos = ["o1-labs/docs2",
-         "MinaProtocol/mina"]
+        "MinaProtocol/mina"]
 
 def get_files(contents, repo_name, dir_name):
     """
@@ -50,6 +50,17 @@ def get_files(contents, repo_name, dir_name):
 
                 stack.append((dir_contents, current_repo_name, f"{current_dir_name}/{sub_dir_name}"))
 
+book_repo = "o1-labs/proof-systems"
+book_repo_name = book_repo.split("/")[-1]
+
+book_contents_url = f"https://api.github.com/repos/{book_repo}/contents/book/src"
+book_contents = requests.get(book_contents_url, headers=headers).json()
+
+if not os.path.exists(f"files/{book_repo_name}"):
+    os.mkdir(f"files/{book_repo_name}")
+
+get_files(book_contents, "proof-systems", "")
+
 for repo in repos:
     repo_name = repo.split("/")[-1]
     contents_url = f"https://api.github.com/repos/{repo}/contents/docs"
@@ -59,7 +70,4 @@ for repo in repos:
         os.mkdir(f"files/{repo_name}")
 
     get_files(contents, repo_name, "")
-
-            
-
 

@@ -54,8 +54,8 @@ md_docs = [md_splitter.create_documents([markdown_text.page_content]) for markdo
 
 # SPLITTING
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size = 600,
-    chunk_overlap  = 150,
+    chunk_size = 512,
+    chunk_overlap  = 128,
 )
 
 # IMPORTANT VARIABLE
@@ -67,8 +67,7 @@ texts = [c.page_content for c in splitted_docs]
 
 print("Created", len(texts), "texts")
 
-chunks = [texts[i:(i + 1000) if (i+1000) <  len(texts) else len(texts)
-                 ] for i in range(0, len(texts), 1000)]
+chunks = [texts[i:(i + 1000) if (i+1000) <  len(texts) else len(texts)] for i in range(0, len(texts), 1000)]
 embeds = []
 
 print("Have", len(chunks), "chunks")
@@ -99,7 +98,6 @@ pinecone.create_index(
     dimension=1536
 ) 
 
-
 while not pinecone.describe_index(index_name).status['ready']:
         time.sleep(1)
 
@@ -118,9 +116,13 @@ def extract_title(document):
 
 ids = [str(uuid4()) for _ in range(len(splitted_docs))]
 
+vector_type = os.getenv('DOCS_VECTOR_TYPE') or 'DOCS_VECTOR_TYPE'
+
 vectors = [(ids[i], embeds[i], {
     'text': splitted_docs[i].page_content, 
-    'title': extract_title(splitted_docs[i])}) for i in range(len(splitted_docs))]
+    'title': extract_title(splitted_docs[i]),
+    'vector_type': vector_type,
+    }) for i in range(len(splitted_docs))]
 
 for i in range(0, len(vectors), 100):
     batch = vectors[i:i+100]

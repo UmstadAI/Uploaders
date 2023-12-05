@@ -25,8 +25,8 @@ print(f"fetched {len(all_pages_data)} documents.")
 
 # SPLITTING
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size = 600,
-    chunk_overlap  = 150,
+    chunk_size = 512,
+    chunk_overlap  = 128,
 )
 
 splitted_docs = text_splitter.split_documents(all_pages_data)
@@ -59,9 +59,13 @@ def extract_title(document):
 
 ids = [str(uuid4()) for _ in range(len(splitted_docs))]
 
+vector_type = os.getenv('DOCS_VECTOR_TYPE') or 'DOCS_VECTOR_TYPE'
+
 vectors = [(ids[i], embeds[i], {
     'text': splitted_docs[i].page_content, 
-    'title': extract_title(splitted_docs[i])}) for i in range(len(splitted_docs))]
+    'title': extract_title(splitted_docs[i]),
+    'vector_type': vector_type,
+    }) for i in range(len(splitted_docs))]
 
 
 """
