@@ -11,7 +11,6 @@ build/
 venv/
 env/
 env-bak/
-env/
 
 # IDE specific
 .idea/
@@ -47,15 +46,14 @@ env/
 **/.DS_Store 
 **.DS_Store    
 *.DS_Store
-  
+
+# Ignore specific files and directories
 **/*.csv
 **/*.txt
-
-# Ignore all folders named "node_modules"
 **/node_modules/
-
-# Ignore all folders named "files"
 **/files/
 doc_loader/.DS_Store
 github_loader/output.csv
 issue_loader/output.csv
+github_project_loader/example_loader/examples
+github_project_loader/zkapp_project_loader/projects
