@@ -154,14 +154,6 @@ def run_with_timeout(func, args, timeout):
 os.mkdir('issues_json')
 
 for index in indexes:
-    txt_file_path = f"issues_json/processed{index}.json"
-    with open(file_path, 'r') as file:
-        contents = file.read()
-
-    contents = json.loads(contents)
-    title = contents['title']
-    issue = contents['issue']
-
     full_question = {"full_question": f"{title}\n{issue}"}
 
     print(f"Processing {index}...")
@@ -171,6 +163,14 @@ for index in indexes:
         continue
 
     if result is not None:
+        txt_file_path = f"issues_json/processed{index}.json"
+        with open(file_path, 'r') as file:
+            contents = file.read()
+
+        contents = json.loads(contents)
+        title = contents['title']
+        issue = contents['issue']
+
         file_path = f"issues_json/processed{index}.json"
 
         result = json.loads(result)
@@ -180,4 +180,4 @@ for index in indexes:
         with open(file_path, 'w') as file:
             file.write(json.dumps(result, indent=4))
 
-        time.sleep(3)
+        time.sleep(7)
