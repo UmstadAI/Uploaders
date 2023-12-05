@@ -48,7 +48,7 @@ env/
 **.DS_Store   
 
 github_loader/output.csv
-issues_loader/output.csv
+issue_loader/output.csv
 **/*.csv
 **/*.txt
 
