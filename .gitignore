@@ -50,6 +50,7 @@ env/
 github_loader/output.csv
 issues_loader/output.csv
 **/*.csv
+**/*.txt
 
 # Ignore all folders named "node_modules"
 **/node_modules/
