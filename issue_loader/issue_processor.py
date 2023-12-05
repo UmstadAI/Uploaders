@@ -3,6 +3,7 @@ import ast
 import json
 import time
 import openai
+import threading
 
 import pandas as pd
 import numpy as np
@@ -135,7 +136,25 @@ def process_txt(number_of_txt):
 
     return result
 
+def run_with_timeout(func, args, timeout):
+    result = [None]  # A mutable object to store the result of func
+
+    def target(result_list):
+        result_list[0] = func(*args)
+
+    thread = threading.Thread(target=target, args=(result,))
+    thread.start()
+    thread.join(timeout)  # Wait for the specified timeout
+    if thread.is_alive():
+        print("Function timed out")
+        return None  # Function did not complete within timeout
+    else:
+        return result[0]  # Function completed within timeout
+
 for index in indexes:
     print(index)
-    pompiko = process_txt(index)
+    result = run_with_timeout(process_txt, [index], 60)  # 60 seconds timeout
+    if result is not None:
+        # Process the result if the function completed within the timeout
+        pompiko = result
     time.sleep(1)
