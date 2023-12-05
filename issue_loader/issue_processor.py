@@ -151,10 +151,34 @@ def run_with_timeout(func, args, timeout):
     else:
         return result[0]  # Function completed within timeout
 
+os.mkdir('issues_json')
+
 for index in indexes:
-    print(index)
-    result = run_with_timeout(process_txt, [index], 60)  # 60 seconds timeout
+    txt_file_path = f"issues_json/processed{index}.json"
+    with open(file_path, 'r') as file:
+        contents = file.read()
+
+    contents = json.loads(contents)
+    title = contents['title']
+    issue = contents['issue']
+
+    full_question = {"full_question": f"{title}\n{issue}"}
+
+    print(f"Processing {index}...")
+    result = run_with_timeout(process_txt, [index], 60)
+    
     if result is not None:
-        # Process the result if the function completed within the timeout
         pompiko = result
-    time.sleep(1)
+    if result is None:
+        result = run_with_timeout(process_txt, [index], 60)
+
+    file_path = f"issues_json/processed{index}.json"
+
+    result = json.loads(result)
+    result.update(full_question)
+    
+    print(f"Saving {i}...")
+    with open(file_path, 'w') as file:
+        file.write(json.dumps(result, indent=4))
+
+    time.sleep(3)
