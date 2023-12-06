@@ -55,5 +55,7 @@ env-bak/
 doc_loader/.DS_Store
 github_loader/output.csv
 issue_loader/output.csv
+issue_loader/issues_json/
+
 github_project_loader/example_loader/examples
 github_project_loader/zkapp_project_loader/projects

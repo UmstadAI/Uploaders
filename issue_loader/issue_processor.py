@@ -157,14 +157,14 @@ for index in indexes:
     full_question = {"full_question": f"{title}\n{issue}"}
 
     print(f"Processing {index}...")
-    result = run_with_timeout(process_txt, [index], 60)
+    result = run_with_timeout(process_txt, [index], 90)
 
     if result is None:
         continue
 
     if result is not None:
-        txt_file_path = f"issues_json/processed{index}.json"
-        with open(file_path, 'r') as file:
+        txt_file_path = f"issues_txt/{index}.txt"
+        with open(txt_file_path, 'r') as file:
             contents = file.read()
 
         contents = json.loads(contents)
