@@ -180,4 +180,4 @@ for index in indexes:
         with open(file_path, 'w') as file:
             file.write(json.dumps(result, indent=4))
 
-        time.sleep(7)
+        time.sleep(10)
