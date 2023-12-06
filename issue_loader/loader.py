@@ -45,7 +45,7 @@ texts = []
 metadatas = []
 
 for issue in issues:
-    texts.append(issue['answer'])
+    texts.append("Question: " + str(issue['question']) + "\n Answer: " + str(issue['answer']))
     metadatas.append(issue['question'])
 
 chunks = [texts[i:(i + 1000) if (i+1000) <  len(texts) else len(texts)] for i in range(0, len(texts), 1000)]
@@ -60,9 +60,10 @@ for chunk, i in zip(chunks, range(len(chunks))):
         input=chunk,
         model=model_name,
     )
-    new_embeds = [record['embedding'] for record in new_embeddings['data']]
-    embeds.extend(new_embeds)
 
+    new_embeds = [emb.embedding for emb in new_embeddings.data]
+    embeds.extend(new_embeds)
+    print(len(embeds))
     # add time sleep if you encounter embedding token rate limit issue
     time.sleep(2)
 
