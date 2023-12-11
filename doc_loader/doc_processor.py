@@ -94,10 +94,13 @@ index_name = "zkappumstad"
 
 if index_name in pinecone.list_indexes():
     pinecone.delete_index(index_name)
+    print(f"{index_name} index deleted")
 
 pinecone.create_index(name=index_name, metric="dotproduct", dimension=1536)
+print(f"{index_name} created")
 
 while not pinecone.describe_index(index_name).status["ready"]:
+    print("Waiting for index ready")
     time.sleep(1)
 
 index = pinecone.Index(index_name)
@@ -135,5 +138,6 @@ vectors = [
 for i in range(0, len(vectors), 100):
     batch = vectors[i : i + 100]
     index.upsert(batch)
+    print(f"Upserted batch {i}")
 
 print(index.describe_index_stats())
