@@ -83,7 +83,8 @@ def upsert(docs):
         print("Chunk", i, "of", len(chunk))
         new_embeddings = client.embeddings.create(input=chunk,
         model=model_name)
-        new_embeds = [record['embedding'] for record in new_embeddings['data']]
+        new_embeds = [emb.embedding for emb in new_embeddings.data]
+
         embeds.extend(new_embeds)
         time.sleep(3)
 

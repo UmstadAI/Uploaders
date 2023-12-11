@@ -40,7 +40,7 @@ embeddings = client.embeddings.create(input=texts,
 model=model_name)
 
 # IMPORTANT VARIABLE
-embeds = [record['embedding'] for record in embeddings['data']]
+embeds = [emb.embedding for emb in embeddings.data]
 
 # PINECONE STORE
 pinecone.init(api_key=pinecone_api_key, environment=pinecone_env)
