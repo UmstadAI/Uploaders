@@ -3,9 +3,10 @@ import glob
 import pygit2
 
 from dotenv import load_dotenv, find_dotenv
-_ = load_dotenv(find_dotenv(), override=True) # read local .env file
 
-token = os.getenv('GITHUB_ACCESS_TOKEN') or 'GITHUB_ACCESS_TOKEN'
+_ = load_dotenv(find_dotenv(), override=True)  # read local .env file
+
+token = os.getenv("GITHUB_ACCESS_TOKEN") or "GITHUB_ACCESS_TOKEN"
 
 projects = [
     "https://github.com/rpanic/vale-ui",
@@ -33,10 +34,11 @@ projects = [
     "https://github.com/devarend/binance-oracle",
 ]
 
-os.makedirs('projects', exist_ok=True)
+os.makedirs("projects", exist_ok=True)
 
-def clone_github_project(repo_link): 
-    parts = repo_link.strip('/').split('/')
+
+def clone_github_project(repo_link):
+    parts = repo_link.strip("/").split("/")
     owner, repo = parts[-2], parts[-1]
 
     repoClone = pygit2.clone_repository(repo_link, f"./projects/{repo}")

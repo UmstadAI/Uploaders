@@ -2,7 +2,7 @@ import glob
 import os
 from openai import OpenAI
 
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY') or 'OPENAI_API_KEY')
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY") or "OPENAI_API_KEY")
 import pinecone
 import time
 import re
@@ -19,23 +19,24 @@ from langchain.text_splitter import (
 )
 
 from dotenv import load_dotenv, find_dotenv
-_ = load_dotenv(find_dotenv(), override=True) # read local .env file
+
+_ = load_dotenv(find_dotenv(), override=True)  # read local .env file
 
 metadata_fields = {
-    'project_name',
-    'project_description',
-    'file_name_with_folder',
-    'comments'
+    "project_name",
+    "project_description",
+    "file_name_with_folder",
+    "comments",
 }
 
-token = os.getenv('GITHUB_ACCESS_TOKEN') or 'GITHUB_ACCESS_TOKEN'
+token = os.getenv("GITHUB_ACCESS_TOKEN") or "GITHUB_ACCESS_TOKEN"
 
-pinecone_api_key = os.getenv('PINECONE_API_KEY') or 'YOUR_API_KEY'
-pinecone_env = os.getenv('PINECONE_ENVIRONMENT') or "YOUR_ENV"
+pinecone_api_key = os.getenv("PINECONE_API_KEY") or "YOUR_API_KEY"
+pinecone_env = os.getenv("PINECONE_ENVIRONMENT") or "YOUR_ENV"
 
 pinecone.init(api_key=pinecone_api_key, environment=pinecone_env)
 
-index_name = 'zkappumstad'
+index_name = "zkappumstad"
 
 # Delete/Comment if you want to upload MORE
 """ if index_name in pinecone.list_indexes():
@@ -49,40 +50,43 @@ pinecone.create_index(
 
 time.sleep(5) """
 
+
 def project_loader(owner, project_name):
     g = Github(token)
     repo = g.get_repo(f"{owner}/{project_name}")
 
-    base_dir = f'./projects/{project_name}'
+    base_dir = f"./projects/{project_name}"
     project_description = repo.description
-    
+
     def export_project_description_from_readme(content):
         decoded_content = bytes(str(content), "utf-8").decode("unicode_escape")
-        cleaned_content = re.sub(r'# ', '', decoded_content)
-        cleaned_content = re.sub(r'#', '', cleaned_content)
+        cleaned_content = re.sub(r"# ", "", decoded_content)
+        cleaned_content = re.sub(r"#", "", cleaned_content)
 
-        emoji_pattern = re.compile("["
-                            u"\U0001F600-\U0001F64F"  # emoticons
-                            u"\U0001F300-\U0001F5FF"  # symbols & pictographs
-                            u"\U0001F680-\U0001F6FF"  # transport & map symbols
-                            u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
-                            "]+", flags=re.UNICODE)
-        
-        cleaned_content = re.sub(r'```.*?```', '', cleaned_content, flags=re.DOTALL)
-        cleaned_content = emoji_pattern.sub(r'', cleaned_content)
+        emoji_pattern = re.compile(
+            "["
+            "\U0001F600-\U0001F64F"  # emoticons
+            "\U0001F300-\U0001F5FF"  # symbols & pictographs
+            "\U0001F680-\U0001F6FF"  # transport & map symbols
+            "\U0001F1E0-\U0001F1FF"  # flags (iOS)
+            "]+",
+            flags=re.UNICODE,
+        )
+
+        cleaned_content = re.sub(r"```.*?```", "", cleaned_content, flags=re.DOTALL)
+        cleaned_content = emoji_pattern.sub(r"", cleaned_content)
 
         return cleaned_content[:850]
 
     if project_description is None:
         read_me = repo.get_readme()
-        project_description = export_project_description_from_readme(base64.b64decode(read_me.content))
+        project_description = export_project_description_from_readme(
+            base64.b64decode(read_me.content)
+        )
         print("Project description from README.md", project_description)
 
     loader = GenericLoader.from_filesystem(
-        base_dir,
-        glob="**/*",
-        suffixes=[".ts"],
-        parser=LanguageParser(),
+        base_dir, glob="**/*", suffixes=[".ts"], parser=LanguageParser(),
     )
 
     docs = loader.load()
@@ -93,15 +97,17 @@ def project_loader(owner, project_name):
 
     docs = ts_splitter.split_documents(docs)
 
-    model_name = 'text-embedding-ada-002'
+    model_name = "text-embedding-ada-002"
 
     def extract_comments_from_ts_code(ts_code):
-        comment_pattern = r'(\/\/[^\n]*|\/\*[\s\S]*?\*\/)'
+        comment_pattern = r"(\/\/[^\n]*|\/\*[\s\S]*?\*\/)"
         comments = re.findall(comment_pattern, ts_code)
-        comments_string = ' '.join(comment.strip('/*').strip('*/').strip('//').strip() for comment in comments)
+        comments_string = " ".join(
+            comment.strip("/*").strip("*/").strip("//").strip() for comment in comments
+        )
 
         return comments_string
-    
+
     texts = []
     metadatas = []
 
@@ -109,14 +115,17 @@ def project_loader(owner, project_name):
         metadata = {
             "Project Name": project_name,
             "Project Description": project_description,
-            "File Name": doc.metadata['source'],
+            "File Name": doc.metadata["source"],
             "Project content": extract_comments_from_ts_code(doc.page_content),
         }
 
         texts.append(doc.page_content)
         metadatas.append(metadata)
 
-    chunks = [texts[i:(i + 1000) if (i+1000) <  len(texts) else len(texts)] for i in range(0, len(texts), 1000)]
+    chunks = [
+        texts[i : (i + 1000) if (i + 1000) < len(texts) else len(texts)]
+        for i in range(0, len(texts), 1000)
+    ]
     embeds = []
 
     print("Have", len(chunks), "chunks")
@@ -124,17 +133,16 @@ def project_loader(owner, project_name):
 
     for chunk, i in zip(chunks, range(len(chunks))):
         print("Chunk", i, "of", len(chunk))
-        new_embeddings = client.embeddings.create(input=chunk,
-        model=model_name)
+        new_embeddings = client.embeddings.create(input=chunk, model=model_name)
         new_embeds = [emb.embedding for emb in new_embeddings.data]
 
         embeds.extend(new_embeds)
 
-        # add time sleep if you encounter embedding token rate limit issue
+        #  add time sleep if you encounter embedding token rate limit issue
         time.sleep(7)
 
-    while not pinecone.describe_index(index_name).status['ready']:
-            time.sleep(1)
+    while not pinecone.describe_index(index_name).status["ready"]:
+        time.sleep(1)
 
     index = pinecone.Index(index_name)
 
@@ -143,23 +151,31 @@ def project_loader(owner, project_name):
     def dict_to_list_of_strings(input_dict):
         result = []
         for key, value in input_dict.items():
-            result.append(f'{key}: {value}')
+            result.append(f"{key}: {value}")
         return result
-    
-    vector_type = os.getenv('PROJECT_VECTOR_TYPE') or 'PROJECT_VECTOR_TYPE'
 
-    vectors = [(ids[i], embeds[i], {
-        'text': docs[i].page_content, 
-        'title': dict_to_list_of_strings(metadatas[i]),
-        'vector_type': vector_type
-    }) for i in range(len(docs))]
+    vector_type = os.getenv("PROJECT_VECTOR_TYPE") or "PROJECT_VECTOR_TYPE"
+
+    vectors = [
+        (
+            ids[i],
+            embeds[i],
+            {
+                "text": docs[i].page_content,
+                "title": dict_to_list_of_strings(metadatas[i]),
+                "vector_type": vector_type,
+            },
+        )
+        for i in range(len(docs))
+    ]
 
     for i in range(0, len(vectors), 100):
-        batch = vectors[i:i+100]
+        batch = vectors[i : i + 100]
         print("Upserting batch:", i)
         index.upsert(batch)
 
     print(index.describe_index_stats())
+
 
 # PROJECTS
 """
@@ -190,7 +206,7 @@ projects = [
     "https://github.com/SutuLabs/MinaCTF",
     "https://github.com/WalletZkApp/zk-keyless-wallet-contracts",
     "https://github.com/AdMetaNetwork/admeta-mina-chort-1",
-    "https://github.com/devarend/binance-oracle"
+    "https://github.com/devarend/binance-oracle",
 ]
 
 # TODO: Have some problem these project
@@ -199,7 +215,7 @@ additional_projects = [
 ]
 
 for project in projects:
-    parts = project.strip('/').split('/')
+    parts = project.strip("/").split("/")
     owner, repo = parts[-2], parts[-1]
     project_loader(owner, repo)
     print("Upserted: ", repo, "from", owner)
