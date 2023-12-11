@@ -9,27 +9,25 @@ import pandas as pd
 import numpy as np
 
 from dotenv import load_dotenv, find_dotenv
-_ = load_dotenv(find_dotenv(), override=True) # read local .env file
 
-openai.api_key = os.getenv('OPENAI_API_KEY') or 'OPENAI_API_KEY'
+_ = load_dotenv(find_dotenv(), override=True)  # read local .env file
 
-client = openai.OpenAI(
-    api_key = openai.api_key
-)
 
-df = pd.read_csv('output.csv')
-df = df[df['comments'].apply(lambda x: len(x) > 3)]
+client = openai.OpenAI(api_key=openai.api_key)
 
-os.mkdir('issues_txt')
+df = pd.read_csv("output.csv")
+df = df[df["comments"].apply(lambda x: len(x) > 3)]
+
+os.mkdir("issues_txt")
 
 indexes = []
 
 for index, row in df.iterrows():
-    writer = row['writer']
-    title = row['title']
-    is_open = row['is_open']
-    issue_body = row['body']
-    comments = row['comments']
+    writer = row["writer"]
+    title = row["title"]
+    is_open = row["is_open"]
+    issue_body = row["body"]
+    comments = row["comments"]
     comments = ast.literal_eval(comments)
 
     issue = {
@@ -37,15 +35,15 @@ for index, row in df.iterrows():
         "author": writer,
         "is_open": is_open,
         "issue": issue_body,
-        "comments": comments
-    }       
+        "comments": comments,
+    }
 
     indexes.append(index)
 
     file_path = f"issues_txt/{index}.txt"
     json_string = json.dumps(issue, indent=4)
 
-    with open(file_path, 'w') as f:
+    with open(file_path, "w") as f:
         f.write(json_string)
 
 
@@ -106,35 +104,31 @@ Give me a JSON file with the following format in markdown format:
 ```
 """
 
+
 def process_txt(number_of_txt):
     file_path = f"{folder_path}/{number_of_txt}.txt"
 
     if not os.path.exists(file_path):
         return
-    
-    with open(file_path, 'r') as file:
+
+    with open(file_path, "r") as file:
         contents = file.read()
 
     response = client.chat.completions.create(
         model="gpt-4-1106-preview",
-        response_format={ "type": "json_object" },
+        response_format={"type": "json_object"},
         temperature=0.9,
         messages=[
-            {
-                "role": "system",
-                "content": PROMPT
-            },
-            {
-                "role": "user",
-                "content": str(contents)
-            }
-        ]
+            {"role": "system", "content": PROMPT},
+            {"role": "user", "content": str(contents)},
+        ],
     )
 
     result = response.choices[0].message.content
     print(result)
 
     return result
+
 
 def run_with_timeout(func, args, timeout):
     result = [None]  # A mutable object to store the result of func
@@ -151,7 +145,8 @@ def run_with_timeout(func, args, timeout):
     else:
         return result[0]  # Function completed within timeout
 
-os.mkdir('issues_json')
+
+os.mkdir("issues_json")
 
 for index in indexes:
     full_question = {"full_question": f"{title}\n{issue}"}
@@ -164,20 +159,20 @@ for index in indexes:
 
     if result is not None:
         txt_file_path = f"issues_txt/{index}.txt"
-        with open(txt_file_path, 'r') as file:
+        with open(txt_file_path, "r") as file:
             contents = file.read()
 
         contents = json.loads(contents)
-        title = contents['title']
-        issue = contents['issue']
+        title = contents["title"]
+        issue = contents["issue"]
 
         file_path = f"issues_json/processed{index}.json"
 
         result = json.loads(result)
         result.update(full_question)
-        
+
         print(f"Saving {index}...")
-        with open(file_path, 'w') as file:
+        with open(file_path, "w") as file:
             file.write(json.dumps(result, indent=4))
 
         time.sleep(10)

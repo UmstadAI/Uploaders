@@ -7,23 +7,22 @@ from github import Github
 from langchain.document_loaders import GitHubIssuesLoader
 
 from dotenv import load_dotenv, find_dotenv
-_ = load_dotenv(find_dotenv(), override=True) # read local .env file
 
-token = os.getenv('GITHUB_ACCESS_TOKEN') or 'GITHUB_ACCESS_TOKEN'
+_ = load_dotenv(find_dotenv(), override=True)  # read local .env file
+
+token = os.getenv("GITHUB_ACCESS_TOKEN") or "GITHUB_ACCESS_TOKEN"
 
 loader = GitHubIssuesLoader(
-    repo="o1-labs/o1js",
-    access_token=token,
-    state="all",
-    include_prs=False,
+    repo="o1-labs/o1js", access_token=token, state="all", include_prs=False,
 )
 
 docs = loader.load()
-issue_links = [link.metadata['url'] for link in docs]
+issue_links = [link.metadata["url"] for link in docs]
+
 
 def get_github_issue_and_comments(issue_link):
     # Extract the owner, repository, and issue number from the provided link
-    parts = issue_link.strip('/').split('/')
+    parts = issue_link.strip("/").split("/")
     owner, repo, issue_number = parts[-4], parts[-3], parts[-1]
 
     g = Github(token)
@@ -37,6 +36,7 @@ def get_github_issue_and_comments(issue_link):
     except Exception as e:
         print(f"Error fetching comments: {e}")
         return None, f"Error fetching comments: {e}"
+
 
 def extract_issue_data(issue_links):
     issues = []
@@ -62,37 +62,40 @@ def extract_issue_data(issue_links):
             # comment_reactions = comment['reactions']
             # comment_reactions.pop('url', None)
             comments.append((comment_writer, comment_body))
-        
-        issue['number'] = issue_number
-        issue['title'] = issue_title
-        issue['writer'] = issue_writer
-        issue['is_open'] = is_issue_open
-        issue['body'] = issue_body
-        issue['comments'] = comments
+
+        issue["number"] = issue_number
+        issue["title"] = issue_title
+        issue["writer"] = issue_writer
+        issue["is_open"] = is_issue_open
+        issue["body"] = issue_body
+        issue["comments"] = comments
 
         issues.append(issue)
         print(issues)
         x += 1
-        
+
     return issues
+
 
 issue_data = extract_issue_data(issue_links)
 print(len(issue_data))
 
-file_name = 'output.csv'
+file_name = "output.csv"
 
-with open(file_name, mode='w', newline='') as file:
+with open(file_name, mode="w", newline="") as file:
     writer = csv.writer(file)
+
 
 def export_to_csv(data, file_name):
     field_names = data[0].keys()
 
-    with open(file_name, 'w', newline='') as csvfile:
+    with open(file_name, "w", newline="") as csvfile:
         csv_writer = csv.DictWriter(csvfile, fieldnames=field_names)
 
         csv_writer.writeheader()
 
         for row in data:
             csv_writer.writerow(row)
+
 
 export_to_csv(issue_data, file_name)
