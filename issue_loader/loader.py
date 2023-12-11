@@ -29,17 +29,24 @@ json_files = glob.glob(os.path.join(base_dir, '**/*.json'), recursive=True)
 issues = []
 
 for issue_path in json_files:
-    with open(issue_path, 'r') as file:
-        issue = file.read()
-        issue = json.loads(issue)
+    try:
+        with open(issue_path, 'r') as file:
+            issue_data = file.read()
+        
+        issue = json.loads(issue_data)
 
-        try:
+        if not issue.get('full_question'):
+            question = issue['question']
+        else:
             question = issue['full_question'] + issue['question']
-            answer = issue['answer']
-        except:
-            continue
 
+        answer = issue['answer']
+        
         issues.append({"question": question, "answer": answer})
+
+    except (KeyError, json.JSONDecodeError) as e:
+        print(f"Error processing file {issue_path}: {e}")
+        continue
 
 texts = []
 metadatas = []

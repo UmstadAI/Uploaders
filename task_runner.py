@@ -9,6 +9,7 @@ commands = [
     'cd github_project_loader/example_loader && python loader.py',
     'cd github_project_loader/tutorials_loader && python loader.py',
     'cd github_project_loader/zkapp_project_loader && python loader.py',
+    'cd issue_loader && python loader.py'
 ]
 
 for cmd in commands:
