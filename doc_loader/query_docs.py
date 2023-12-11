@@ -1,6 +1,8 @@
 import glob
 import os
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY') or 'OPENAI_API_KEY')
 import pinecone
 
 from langchain.vectorstores import Pinecone
@@ -12,7 +14,6 @@ from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv(), override=True) # read local .env file
 
-openai.api_key = os.getenv('OPENAI_API_KEY') or 'OPENAI_API_KEY'
 pinecone_api_key = os.getenv('PINECONE_API_KEY') or 'YOUR_API_KEY'
 pinecone_env = os.getenv('PINECONE_ENVIRONMENT') or "YOUR_ENV"
 
@@ -40,7 +41,7 @@ def query_docs(query):
         retriever=vector_store.as_retriever(),
     )
 
-    xq = openai.Embedding.create(input=query, engine=embed_model)['data'][0]['embedding']
+    xq = client.embeddings.create(input=query, engine=embed_model)['data'][0]['embedding']
     res = index.query([xq], top_k = 3, include_values=True, include_metadata=True)
 
     return qa.run(query)

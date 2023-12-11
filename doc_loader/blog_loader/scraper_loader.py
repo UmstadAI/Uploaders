@@ -1,7 +1,9 @@
 import requests
 import glob
 import os
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY') or 'OPENAI_API_KEY')
 import pinecone
 import time
 
@@ -14,7 +16,6 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv(), override=True) # read local .env file
 
-openai.api_key = os.getenv('OPENAI_API_KEY') or 'OPENAI_API_KEY'
 pinecone_api_key = os.getenv('PINECONE_API_KEY') or 'YOUR_API_KEY'
 pinecone_env = os.getenv('PINECONE_ENVIRONMENT') or "YOUR_ENV"
 
@@ -80,10 +81,8 @@ def upsert(docs):
 
     for chunk, i in zip(chunks, range(len(chunks))):
         print("Chunk", i, "of", len(chunk))
-        new_embeddings = openai.Embedding.create(
-            input=chunk,
-            model=model_name,
-        )
+        new_embeddings = client.embeddings.create(input=chunk,
+        model=model_name)
         new_embeds = [record['embedding'] for record in new_embeddings['data']]
         embeds.extend(new_embeds)
         time.sleep(3)

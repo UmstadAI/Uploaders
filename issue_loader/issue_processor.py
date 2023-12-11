@@ -11,7 +11,6 @@ import numpy as np
 from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv(), override=True) # read local .env file
 
-openai.api_key = os.getenv('OPENAI_API_KEY') or 'OPENAI_API_KEY'
 
 client = openai.OpenAI(
     api_key = openai.api_key

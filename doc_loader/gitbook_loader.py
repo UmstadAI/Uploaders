@@ -1,5 +1,7 @@
 import os
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY') or 'OPENAI_API_KEY')
 import pinecone
 import time
 
@@ -10,7 +12,6 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv(), override=True) # read local .env file
 
-openai.api_key = os.getenv('OPENAI_API_KEY') or 'OPENAI_API_KEY'
 pinecone_api_key = os.getenv('PINECONE_API_KEY') or 'YOUR_API_KEY'
 pinecone_env = os.getenv('PINECONE_ENVIRONMENT') or "YOUR_ENV"
 
@@ -35,10 +36,8 @@ splitted_docs = text_splitter.split_documents(all_pages_data)
 model_name = 'text-embedding-ada-002'
 texts = [c.page_content for c in splitted_docs]
 
-embeddings = openai.Embedding.create(
-    input=texts,
-    model=model_name,
-)
+embeddings = client.embeddings.create(input=texts,
+model=model_name)
 
 # IMPORTANT VARIABLE
 embeds = [record['embedding'] for record in embeddings['data']]
