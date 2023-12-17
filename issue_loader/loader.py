@@ -34,6 +34,9 @@ for issue_path in json_files:
 
         issue = json.loads(issue_data)
 
+        if not issue.get("question") or not issue.get("answer"):
+            continue
+
         if not issue.get("full_question"):
             question = issue["question"]
         else:

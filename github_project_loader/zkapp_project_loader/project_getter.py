@@ -9,6 +9,7 @@ _ = load_dotenv(find_dotenv(), override=True)  # read local .env file
 token = os.getenv("GITHUB_ACCESS_TOKEN") or "GITHUB_ACCESS_TOKEN"
 
 projects = [
+    "https://github.com/aerius-labs/zk-snap",
     "https://github.com/rpanic/vale-ui",
     "https://github.com/pico-labs/coinflip-executor-contract",
     "https://github.com/alysiahuggins/proof-of-ownership-zkapp",
