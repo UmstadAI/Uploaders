@@ -220,3 +220,5 @@ for project in projects:
     project_loader(owner, repo)
     print("Upserted: ", repo, "from", owner)
     time.sleep(1)
+
+"Project Loader Completed!"

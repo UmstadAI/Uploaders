@@ -129,3 +129,4 @@ def upsert(docs):
 
 
 upsert(docs)
+print("Scraper Loader completed!")

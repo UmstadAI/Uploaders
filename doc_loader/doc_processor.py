@@ -141,3 +141,4 @@ for i in range(0, len(vectors), 100):
     print(f"Upserted batch {i}")
 
 print(index.describe_index_stats())
+print("Doc processor completed!")

@@ -117,3 +117,4 @@ for i in range(0, len(vectors), 100):
 
 time.sleep(5)
 print(index.describe_index_stats())
+print("Tutorial Loader completed!")

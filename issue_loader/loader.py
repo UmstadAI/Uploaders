@@ -99,3 +99,4 @@ for i in range(0, len(vectors), 100):
     index.upsert(batch)
 
 print(index.describe_index_stats())
+print("Issue Loader Completed!")
