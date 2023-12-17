@@ -89,15 +89,13 @@ vectors = [
         ids[i],
         embeds[i],
         {
-            "text": docs[i].page_content,
+            "text": texts[i],
             "title": metadatas[i],
             "vector_type": vector_type,
         },
     )
     for i in range(len(docs))
 ]
-
-print(vectors[23])
 
 for i in range(0, len(vectors), 100):
     batch = vectors[i : i + 100]
