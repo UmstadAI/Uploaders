@@ -1,4 +1,3 @@
-import glob
 import os
 from openai import OpenAI
 
@@ -11,7 +10,6 @@ from langchain.document_loaders import DirectoryLoader, TextLoader
 from langchain.text_splitter import (
     MarkdownHeaderTextSplitter,
     RecursiveCharacterTextSplitter,
-    Language,
 )
 
 from dotenv import load_dotenv, find_dotenv
@@ -95,7 +93,7 @@ index = pinecone.Index(index_name)
 
 ids = [str(uuid4()) for _ in range(len(texts))]
 
-vector_type = os.getenv("DOCS_VECTOR_TYPE") or "DOCS_VECTOR_TYPE"
+vector_type = os.getenv("CODE_VECTOR_TYPE") or "CODE_VECTOR_TYPE"
 
 vectors = [
     (

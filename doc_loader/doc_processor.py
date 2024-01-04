@@ -59,7 +59,10 @@ md_docs = [md_splitter.create_documents([markdown_text.page_content]) for markdo
 """
 
 # SPLITTING
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=128,)
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=512,
+    chunk_overlap=128,
+)
 
 # IMPORTANT VARIABLE
 splitted_docs = text_splitter.split_documents(docs)
@@ -115,7 +118,7 @@ def extract_title(document):
         elif line.startswith("# "):
             title = line.split("#")[1].strip()
             return title
-    return ""
+    return document.metadata["source"]
 
 
 ids = [str(uuid4()) for _ in range(len(splitted_docs))]

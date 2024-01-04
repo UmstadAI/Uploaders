@@ -22,7 +22,10 @@ pinecone_env = os.getenv("PINECONE_ENVIRONMENT") or "YOUR_ENV"
 base_dir = "./examples/src/examples"
 
 loader = GenericLoader.from_filesystem(
-    base_dir, glob="**/*", suffixes=[".ts", ".js"], parser=LanguageParser(),
+    base_dir,
+    glob="**/*",
+    suffixes=[".ts"],
+    parser=LanguageParser(),
 )
 
 docs = loader.load()
@@ -42,7 +45,13 @@ def extract_comments_from_ts_code(ts_code):
     return comments_string
 
 
-metadatas = [extract_comments_from_ts_code(c.page_content) for c in docs]
+metadatas = [
+    "Filename: "
+    + c.metadata["source"]
+    + " Code content: "
+    + extract_comments_from_ts_code(c.page_content)
+    for c in docs
+]
 
 chunks = [
     texts[i : (i + 1000) if (i + 1000) < len(texts) else len(texts)]
