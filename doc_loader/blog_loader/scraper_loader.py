@@ -66,7 +66,10 @@ docs = get_and_load()
 
 def upsert(docs):
     # SPLITTING
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=512, chunk_overlap=72,)
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=512,
+        chunk_overlap=72,
+    )
 
     # IMPORTANT VARIABLE
     splitted_docs = text_splitter.split_documents(docs)
