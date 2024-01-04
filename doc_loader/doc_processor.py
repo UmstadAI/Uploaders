@@ -115,7 +115,7 @@ def extract_title(document):
         elif line.startswith("# "):
             title = line.split("#")[1].strip()
             return title
-    return ""
+    return document.metadata['source']
 
 
 ids = [str(uuid4()) for _ in range(len(splitted_docs))]
