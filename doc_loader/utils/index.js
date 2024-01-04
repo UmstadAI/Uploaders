@@ -1,4 +1,3 @@
-import { mdxToMd } from "mdx-to-md";
 import fs from "fs";
 import path from "path";
 import { writeFile } from "fs/promises";
