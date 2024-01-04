@@ -32,7 +32,9 @@ def query_docs(query):
     vector_store = Pinecone(index, embed.embed_query, "text")
 
     qa = RetrievalQA.from_chain_type(
-        llm=chat, chain_type="stuff", retriever=vector_store.as_retriever(),
+        llm=chat,
+        chain_type="stuff",
+        retriever=vector_store.as_retriever(),
     )
 
     xq = client.embeddings.create(input=query, engine=embed_model)["data"][0][
