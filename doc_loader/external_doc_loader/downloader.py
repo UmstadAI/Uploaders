@@ -90,6 +90,4 @@ with requests.Session() as session:
         repo_path = Path("files") / repo_name
         repo_path.mkdir(exist_ok=True)
 
-        print(contents)
-
-        get_files(contents, repo_name, "", session)
+        get_files(contents, repo_name, repo_path, session)
