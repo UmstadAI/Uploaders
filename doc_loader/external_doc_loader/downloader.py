@@ -18,7 +18,8 @@ headers = {"Authorization": f"token {token}"}
 rate_limit_delay = 1  # seconds to wait between GitHub API requests to avoid rate limiting
 
 # Ensure a directory exists for the downloaded files
-Path("files").mkdir(exist_ok=True)
+base_dir = Path("files")
+base_dir.mkdir(exist_ok=True)
 
 
 def snake_case(string):
@@ -34,9 +35,6 @@ repos = ["proto-kit/website"]
 
 
 def get_files(contents, repo_name, dir_name, session):
-    """
-    Recursively get all files from a GitHub repository directory.
-    """
     stack = [(contents, repo_name, Path(dir_name))]
 
     while stack:
@@ -90,4 +88,4 @@ with requests.Session() as session:
         repo_path = Path("files") / repo_name
         repo_path.mkdir(exist_ok=True)
 
-        get_files(contents, repo_name, repo_path, session)
+        get_files(contents, repo_name, Path(""), session)
