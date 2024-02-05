@@ -2,7 +2,8 @@ import fs from "fs";
 import path from "path";
 import { writeFile } from "fs/promises";
 
-const absolutePath = path.resolve("../files");
+// Remove external_doc_loader for main files folder
+const absolutePath = path.resolve("../external_doc_loader/files");
 
 const markdownFiles = [];
 
