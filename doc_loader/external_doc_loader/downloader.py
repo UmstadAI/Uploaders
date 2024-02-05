@@ -43,7 +43,6 @@ def get_files(contents, repo_name, dir_name, session):
         current_contents, current_repo_name, current_dir_path = stack.pop()
 
         for content in current_contents:
-            print(current_contents)
             if content["type"] == "file":
                 file_name = content["name"]
                 download_url = content["download_url"]
@@ -67,7 +66,10 @@ def get_files(contents, repo_name, dir_name, session):
                     print(f"Failed to get contents of {dir_contents_url}: {e}")
                     continue
 
-                stack.append((dir_contents, current_repo_name, current_dir_path / sub_dir_name))
+                sub_dir_path = current_dir_path / Path(sub_dir_name).resolve()
+                sub_dir_path.mkdir(parents=True, exist_ok=True)
+                
+                stack.append((dir_contents, current_repo_name, sub_dir_path))
 
             time.sleep(rate_limit_delay)  # Delay to avoid hitting GitHub's rate limit
 
@@ -77,9 +79,7 @@ with requests.Session() as session:
 
     for repo in repos:
         repo_name = repo.split("/")[-1]
-        contents_url = f"https://api.github.com/repos/{repo}/contents/docs"
-        print(contents_url)
-
+        contents_url = f"https://api.github.com/repos/{repo}/contents/src/pages/docs?ref=feature/docs"
 
         try:
             contents = session.get(contents_url).json()
@@ -89,5 +89,7 @@ with requests.Session() as session:
 
         repo_path = Path("files") / repo_name
         repo_path.mkdir(exist_ok=True)
+
+        print(contents)
 
         get_files(contents, repo_name, "", session)
