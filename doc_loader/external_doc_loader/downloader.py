@@ -15,7 +15,9 @@ if not token:
     raise ValueError("GITHUB_ACCESS_TOKEN is not set in the environment.")
 
 headers = {"Authorization": f"token {token}"}
-rate_limit_delay = 1  # seconds to wait between GitHub API requests to avoid rate limiting
+rate_limit_delay = (
+    1  # seconds to wait between GitHub API requests to avoid rate limiting
+)
 
 # Ensure a directory exists for the downloaded files
 base_dir = Path("files")

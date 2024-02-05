@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv, find_dotenv
 
 from openai import OpenAI
+
 _ = load_dotenv(find_dotenv(), override=True)  # read local .env file
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY") or "OPENAI_API_KEY")
