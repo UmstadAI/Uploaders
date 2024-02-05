@@ -34,41 +34,45 @@ def snake_case(string):
 repos = ["proto-kit/website"]
 
 
-def get_files(contents, repo_name, dir_name, session):
-    stack = [(contents, repo_name, Path(dir_name))]
+def get_files(contents, repo_name, dir_name):
+    """
+    Uses stack to get all files from a github repository
+    """
+    stack = [(contents, repo_name, dir_name)]
+
     while stack:
-        current_contents, current_repo_name, current_dir_path = stack.pop()
+        current_contents, current_repo_name, current_dir_name = stack.pop()
 
         for content in current_contents:
             if content["type"] == "file":
                 file_name = content["name"]
                 download_url = content["download_url"]
-                try:
-                    file_content = session.get(download_url).text
-                except HTTPError as e:
-                    print(f"Failed to download {download_url}: {e}")
-                    continue
+                file_content = requests.get(download_url, headers=headers).text
 
-                file_path = current_dir_path / file_name
-                file_path.parent.mkdir(parents=True, exist_ok=True)
-                with open(file_path, "w") as f:
+                with open(
+                    f"files/{current_repo_name}/{current_dir_name}/{file_name}", "w"
+                ) as f:
                     f.write(file_content)
 
             elif content["type"] == "dir":
                 sub_dir_name = content["name"]
                 dir_contents_url = content["url"]
-                try:
-                    dir_contents = session.get(dir_contents_url).json()
-                except HTTPError as e:
-                    print(f"Failed to get contents of {dir_contents_url}: {e}")
-                    continue
+                dir_contents = requests.get(dir_contents_url, headers=headers).json()
 
-                sub_dir_path = current_dir_path / Path(sub_dir_name).resolve()
-                sub_dir_path.mkdir(parents=True, exist_ok=True)
-                
-                stack.append((dir_contents, current_repo_name, sub_dir_path))
+                if not os.path.exists(
+                    f"files/{current_repo_name}/{current_dir_name}/{sub_dir_name}"
+                ):
+                    os.mkdir(
+                        f"files/{current_repo_name}/{current_dir_name}/{sub_dir_name}"
+                    )
 
-            time.sleep(rate_limit_delay)  # Delay to avoid hitting GitHub's rate limit
+                stack.append(
+                    (
+                        dir_contents,
+                        current_repo_name,
+                        f"{current_dir_name}/{sub_dir_name}",
+                    )
+                )
 
 
 with requests.Session() as session:
@@ -87,4 +91,4 @@ with requests.Session() as session:
         repo_path = Path("files") / repo_name
         repo_path.mkdir(exist_ok=True)
 
-        get_files(contents, repo_name, repo_path, session)
+        get_files(contents, repo_name, "")
