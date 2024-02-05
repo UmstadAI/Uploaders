@@ -36,7 +36,6 @@ repos = ["proto-kit/website"]
 
 def get_files(contents, repo_name, dir_name, session):
     stack = [(contents, repo_name, Path(dir_name))]
-
     while stack:
         current_contents, current_repo_name, current_dir_path = stack.pop()
 
@@ -88,4 +87,4 @@ with requests.Session() as session:
         repo_path = Path("files") / repo_name
         repo_path.mkdir(exist_ok=True)
 
-        get_files(contents, repo_name, Path(""), session)
+        get_files(contents, repo_name, repo_path, session)
