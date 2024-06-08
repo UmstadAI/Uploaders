@@ -11,7 +11,6 @@ commands = [
     "cd github_project_loader/zkapp_project_loader && python loader.py",
     "cd issue_loader && python loader.py",
     "cd deprecated_loader && python loader.py",
-
 ]
 
 for cmd in commands:
