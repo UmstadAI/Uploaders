@@ -2,6 +2,9 @@ import subprocess
 
 
 # not included getting files or downloading files! please get them before running this script
+# cd doc_loader && python github_doc_getter.py
+# cd utils && node index.js
+
 commands = [
     "cd doc_loader && python doc_processor.py",
     "cd doc_loader && python gitbook_loader.py",
