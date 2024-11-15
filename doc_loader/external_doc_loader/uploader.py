@@ -107,7 +107,7 @@ def extract_title(document):
 
 ids = [str(uuid4()) for _ in range(len(splitted_docs))]
 
-vector_type = os.getenv("DOCS_VECTOR_TYPE") or "DOCS_VECTOR_TYPE"
+vector_type = "proto"
 
 vectors = [
     (
